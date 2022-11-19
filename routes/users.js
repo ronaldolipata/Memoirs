@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../models/User.js';
+import keyValidation from '../middleware/keysValidation.js';
 
 const router = express.Router();
 
@@ -11,16 +12,16 @@ router
     const offset = req.query.offset || 0;
 
     try {
-      const data = await User.aggregate([
+      const showUser = await User.aggregate([
         { $limit: parseInt(limit) },
         { $skip: parseInt(offset) },
       ]);
-      res.status(200).send(data);
+      res.status(200).send(showUser);
     } catch (error) {
       console.log(error.message);
     }
   })
-  .post(async (req, res) => {
+  .post(keyValidation, async (req, res) => {
     const { firstName, lastName, username, password, email, bio, country } =
       req.body;
 
