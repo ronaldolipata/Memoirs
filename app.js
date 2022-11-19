@@ -2,6 +2,7 @@ import express from 'express';
 import process from 'node:process';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import userRouter from './routes/users.js';
 
 const app = express();
 
@@ -15,6 +16,9 @@ mongoose.connect(process.env.DB_URL);
 mongoose.connection.on('open', () => {
   console.log('Connected');
 });
+
+app.use(express.json());
+app.use('/users', userRouter);
 
 app.get('/', (req, res) => {
   res.status(200).json({
