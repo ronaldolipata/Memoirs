@@ -1,6 +1,7 @@
 import express from 'express';
 import User from '../models/User.js';
 import keyValidation from '../middleware/keysValidation.js';
+import emailValidation from '../middleware/emailValidation.js';
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router
       console.log(error.message);
     }
   })
-  .post(keyValidation, async (req, res) => {
+  .post(keyValidation, emailValidation, async (req, res) => {
     const { firstName, lastName, username, password, email, bio, country } =
       req.body;
 
