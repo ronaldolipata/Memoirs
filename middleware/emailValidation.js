@@ -11,7 +11,9 @@ const emailValidation = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error.message);
+    res.status(400).json({
+      Error: error.message,
+    });
   }
 
   next();

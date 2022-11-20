@@ -17,7 +17,9 @@ router.route('/').get(async (req, res) => {
     ]);
     res.status(200).send(showUser);
   } catch (error) {
-    console.log(error.message);
+    res.status(400).json({
+      Error: error.message,
+    });
   }
 });
 
@@ -42,7 +44,9 @@ router.post(
       });
       res.status(201).send(newUser);
     } catch (error) {
-      console.log(error.message);
+      res.status(400).json({
+        Error: error.message,
+      });
     }
   }
 );
