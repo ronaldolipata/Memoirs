@@ -1,5 +1,5 @@
 const createPostFieldsValidation = (req, res, next) => {
-  const authorId = req.header('X-AUTHOR-ID');
+  const authorId = req.header('X-USER-ID');
   const { title, content, imageUrl, privacy } = req.body;
 
   if (!authorId) {

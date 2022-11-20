@@ -10,7 +10,7 @@ router.post(
   createPostFieldsValidation,
   idValidation,
   async (req, res) => {
-    const authorId = req.header('X-AUTHOR-ID');
+    const authorId = req.header('X-USER-ID');
     const { title, content, imageUrl, privacy } = req.body;
 
     try {
