@@ -2,27 +2,17 @@ import express from 'express';
 import User from '../models/User.js';
 import createUserFieldsValidation from '../middleware/createUserFieldsValidation.js';
 import emailValidation from '../middleware/emailValidation.js';
+import idValidation from '../middleware/idValidation.js';
+import checkIfUserExists from '../middleware/checkIfUserExists.js';
 
 const router = express.Router();
 
-router.route('/').get(async (req, res) => {
-  // Use limit and offset queries if exists. Otherwise, use default values.
-  const limit = req.query.limit || 3;
-  const offset = req.query.offset || 0;
-
-  try {
-    const showUser = await User.aggregate([
-      { $limit: parseInt(limit) },
-      { $skip: parseInt(offset) },
-    ]);
-    res.status(200).send(showUser);
-  } catch (error) {
-    res.status(400).json({
-      Error: error.message,
-    });
-  }
+// Search User by ID
+router.get('/', idValidation, checkIfUserExists, async (req, res) => {
+  res.status(200).send(req.user);
 });
 
+// Create new User
 router.post(
   '/create',
   createUserFieldsValidation,
@@ -31,7 +21,6 @@ router.post(
     const { firstName, lastName, username, password, email, bio, country } =
       req.body;
 
-    // Create new User from request body
     try {
       const newUser = await User.create({
         firstName,
