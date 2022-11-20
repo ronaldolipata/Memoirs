@@ -8,6 +8,7 @@ import postIdValidation from '../middleware/postIdValidation.js';
 
 const router = express.Router();
 
+// Create new Post
 router.post(
   '/create',
   createPostFieldsValidation,
@@ -34,6 +35,7 @@ router.post(
   }
 );
 
+// Search Post by Post ID
 router.get('/:postId', postIdValidation, checkIfPostExists, (req, res) => {
   res.status(200).send(req.post);
 });
