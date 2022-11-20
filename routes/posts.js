@@ -42,13 +42,13 @@ router
   .get(postIdValidation, checkIfPostExists, (req, res) => {
     res.status(200).send(req.post);
   })
+  // Update Post
   .patch(postIdValidation, checkIfPostExists, async (req, res) => {
-    const postId = req.params.postId;
     const { title, content, imageUrl, privacy } = req.body;
 
     try {
       const updatedPost = await Post.findByIdAndUpdate(
-        { _id: postId },
+        { _id: req.postId },
         {
           $set: {
             title,
@@ -60,6 +60,19 @@ router
         { new: true }
       );
       res.status(200).send(updatedPost);
+    } catch (error) {
+      res.status(400).json({
+        Error: error.message,
+      });
+    }
+  })
+  // Delete Post
+  .delete(postIdValidation, checkIfPostExists, async (req, res) => {
+    try {
+      await Post.deleteOne({ _id: req.postId });
+      res.status(200).json({
+        Message: `Post ID: ${req.postId} is now delete`,
+      });
     } catch (error) {
       res.status(400).json({
         Error: error.message,

@@ -14,6 +14,7 @@ const checkIfPostExists = async (req, res, next) => {
   }
 
   req.post = postExists;
+  req.postId = postId;
 
   next();
 };
