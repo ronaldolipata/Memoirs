@@ -7,8 +7,6 @@ const checkIfUserExists = async (req, res, next) => {
     username: username,
   });
 
-  console.log(userExists);
-
   if (!userExists) {
     return res.status(404).json({
       Error: 'No User found',

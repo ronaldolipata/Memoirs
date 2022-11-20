@@ -3,6 +3,8 @@ import Post from '../models/Post.js';
 import createPostFieldsValidation from '../middleware/createPostFieldsValidation.js';
 import idValidation from '../middleware/idValidation.js';
 import checkIfUserIdExists from '../middleware/checkIfUserIdExists.js';
+import checkIfPostExists from '../middleware/checkIfPostExists.js';
+import postIdValidation from '../middleware/postIdValidation.js';
 
 const router = express.Router();
 
@@ -31,5 +33,9 @@ router.post(
     }
   }
 );
+
+router.get('/:postId', postIdValidation, checkIfPostExists, (req, res) => {
+  res.status(200).send(req.post);
+});
 
 export default router;
