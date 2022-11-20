@@ -1,4 +1,4 @@
-const keysValidation = (req, res, next) => {
+const createUserFieldsValidation = (req, res, next) => {
   const { firstName, lastName, username, password, email, country } = req.body;
 
   if (!firstName) {
@@ -36,4 +36,4 @@ const keysValidation = (req, res, next) => {
   next();
 };
 
-export default keysValidation;
+export default createUserFieldsValidation;

@@ -1,6 +1,6 @@
 import express from 'express';
 import User from '../models/User.js';
-import keyValidation from '../middleware/keysValidation.js';
+import createUserFieldsValidation from '../middleware/createUserFieldsValidation.js';
 import emailValidation from '../middleware/emailValidation.js';
 
 const router = express.Router();
@@ -21,25 +21,30 @@ router.route('/').get(async (req, res) => {
   }
 });
 
-router.post('/create', keyValidation, emailValidation, async (req, res) => {
-  const { firstName, lastName, username, password, email, bio, country } =
-    req.body;
+router.post(
+  '/create',
+  createUserFieldsValidation,
+  emailValidation,
+  async (req, res) => {
+    const { firstName, lastName, username, password, email, bio, country } =
+      req.body;
 
-  // Create new User from request body
-  try {
-    const newUser = await User.create({
-      firstName,
-      lastName,
-      username,
-      password,
-      email,
-      bio,
-      country,
-    });
-    res.status(201).send(newUser);
-  } catch (error) {
-    console.log(error.message);
+    // Create new User from request body
+    try {
+      const newUser = await User.create({
+        firstName,
+        lastName,
+        username,
+        password,
+        email,
+        bio,
+        country,
+      });
+      res.status(201).send(newUser);
+    } catch (error) {
+      console.log(error.message);
+    }
   }
-});
+);
 
 export default router;
