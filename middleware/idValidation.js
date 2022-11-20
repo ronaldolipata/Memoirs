@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import User from '../models/User.js';
 
 const idValidation = async (req, res, next) => {
-  const authorId = req.header('X-USER-ID');
+  const authorId = req.header('X-AUTHOR-ID');
   const { Types } = mongoose;
 
   // Check if valid ObjectId
