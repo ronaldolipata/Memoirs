@@ -1,11 +1,13 @@
 import User from '../models/User.js';
 
 const checkIfUserExists = async (req, res, next) => {
-  const userId = req.header('X-USER-ID');
+  const username = req.params.username;
 
   const userExists = await User.findOne({
-    _id: userId,
+    username: username,
   });
+
+  console.log(userExists);
 
   if (!userExists) {
     return res.status(404).json({
