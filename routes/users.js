@@ -4,6 +4,7 @@ import createUserFieldsValidation from '../middleware/createUserFieldsValidation
 import emailValidation from '../middleware/emailValidation.js';
 import idValidation from '../middleware/idValidation.js';
 import checkIfUserExists from '../middleware/checkIfUserExists.js';
+import checkIfUsernameExists from '../middleware/checkIfUsernameExists.js';
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.get('/', idValidation, checkIfUserExists, async (req, res) => {
 router.post(
   '/create',
   createUserFieldsValidation,
+  checkIfUsernameExists,
   emailValidation,
   async (req, res) => {
     const { firstName, lastName, username, password, email, bio, country } =
