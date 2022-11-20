@@ -35,10 +35,9 @@ router.post(
   }
 );
 
-// Search Post by Post ID
-
 router
   .route('/:postId')
+  // Search Post by Post ID
   .get(postIdValidation, checkIfPostExists, (req, res) => {
     res.status(200).send(req.post);
   })
