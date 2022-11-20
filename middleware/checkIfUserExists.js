@@ -13,6 +13,8 @@ const checkIfUserExists = async (req, res, next) => {
     });
   }
 
+  req.user = userExists;
+
   next();
 };
 
