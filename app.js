@@ -3,6 +3,7 @@ import process from 'node:process';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRouter from './routes/users.js';
+import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ mongoose.connection.on('open', () => {
 
 app.use(express.json());
 app.use('/users', userRouter);
+app.use(errorHandler);
 
 app.get('/', (req, res) => {
   res.status(200).json({
