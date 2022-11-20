@@ -1,6 +1,5 @@
 import express from 'express';
 import Post from '../models/Post.js';
-import keyValidation from '../middleware/keysValidation.js';
 
 const router = express.Router();
 
