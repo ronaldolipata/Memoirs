@@ -36,8 +36,35 @@ router.post(
 );
 
 // Search Post by Post ID
-router.get('/:postId', postIdValidation, checkIfPostExists, (req, res) => {
-  res.status(200).send(req.post);
-});
+
+router
+  .route('/:postId')
+  .get(postIdValidation, checkIfPostExists, (req, res) => {
+    res.status(200).send(req.post);
+  })
+  .patch(postIdValidation, checkIfPostExists, async (req, res) => {
+    const postId = req.params.postId;
+    const { title, content, imageUrl, privacy } = req.body;
+
+    try {
+      const updatedPost = await Post.findByIdAndUpdate(
+        { _id: postId },
+        {
+          $set: {
+            title,
+            content,
+            imageUrl,
+            privacy,
+          },
+        },
+        { new: true }
+      );
+      res.status(200).send(updatedPost);
+    } catch (error) {
+      res.status(400).json({
+        Error: error.message,
+      });
+    }
+  });
 
 export default router;
