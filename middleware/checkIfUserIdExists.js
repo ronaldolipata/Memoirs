@@ -9,7 +9,7 @@ const checkIfUserIdExists = async (req, res, next) => {
 
   if (!userIdExists) {
     return res.status(404).json({
-      Error: 'No User found',
+      Error: 'User ID does not exists',
     });
   }
 

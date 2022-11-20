@@ -2,7 +2,7 @@ import express from 'express';
 import Post from '../models/Post.js';
 import createPostFieldsValidation from '../middleware/createPostFieldsValidation.js';
 import idValidation from '../middleware/idValidation.js';
-import checkIfUserIdExists from '../middleware/checkIfUserExists.js';
+import checkIfUserIdExists from '../middleware/checkIfUserIdExists.js';
 
 const router = express.Router();
 
