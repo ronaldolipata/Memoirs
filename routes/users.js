@@ -1,44 +1,20 @@
 import express from 'express';
-import User from '../models/User.js';
 import createUserFieldsValidation from '../middleware/createUserFieldsValidation.js';
 import emailValidation from '../middleware/emailValidation.js';
 import usernameValidation from '../middleware/usernameValidation.js';
 import checkIfUserExists from '../middleware/checkIfUserExists.js';
+import userController from '../controllers/users.js';
 
 const router = express.Router();
 
-// Search User by Username
-router.get('/:username', checkIfUserExists, async (req, res) => {
-  res.status(200).send(req.user);
-});
+router.get('/:username', checkIfUserExists, userController.searchByUsername);
 
-// Create new User
 router.post(
   '/create',
   createUserFieldsValidation,
   usernameValidation,
   emailValidation,
-  async (req, res) => {
-    const { firstName, lastName, username, password, email, bio, country } =
-      req.body;
-
-    try {
-      const newUser = await User.create({
-        firstName,
-        lastName,
-        username,
-        password,
-        email,
-        bio,
-        country,
-      });
-      res.status(201).send(newUser);
-    } catch (error) {
-      res.status(400).json({
-        Error: error.message,
-      });
-    }
-  }
+  userController.createUser
 );
 
 export default router;

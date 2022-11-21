@@ -14,7 +14,7 @@ dotenv.config();
 // Use PORT from .env file if exists. Otherwise, use PORT 3000
 const PORT = process.env.PORT || 3000;
 mongoose
-  .connect(process.env.DB_UL)
+  .connect(process.env.DB_URL)
   .then(() => {
     app.listen(PORT, () => {
       console.log(`App is now connected to DB and listening to port ${PORT}`);

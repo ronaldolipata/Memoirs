@@ -1,82 +1,25 @@
 import express from 'express';
-import Post from '../models/Post.js';
 import createPostFieldsValidation from '../middleware/createPostFieldsValidation.js';
 import idValidation from '../middleware/idValidation.js';
 import checkIfUserIdExists from '../middleware/checkIfUserIdExists.js';
 import checkIfPostExists from '../middleware/checkIfPostExists.js';
 import postIdValidation from '../middleware/postIdValidation.js';
+import postController from '../controllers/posts.js';
 
 const router = express.Router();
 
-// Create new Post
 router.post(
   '/create',
   createPostFieldsValidation,
   idValidation,
   checkIfUserIdExists,
-  async (req, res) => {
-    const authorId = req.header('X-USER-ID');
-    const { title, content, imageUrl, privacy } = req.body;
-
-    try {
-      const newPost = await Post.create({
-        authorId,
-        title,
-        content,
-        imageUrl,
-        privacy,
-      });
-      res.status(201).send(newPost);
-    } catch (error) {
-      res.status(400).json({
-        Error: error.message,
-      });
-    }
-  }
+  postController.createPost
 );
 
 router
   .route('/:postId')
-  // Search Post by Post ID
-  .get(postIdValidation, checkIfPostExists, (req, res) => {
-    res.status(200).send(req.post);
-  })
-  // Update Post
-  .patch(postIdValidation, checkIfPostExists, async (req, res) => {
-    const { title, content, imageUrl, privacy } = req.body;
-
-    try {
-      const updatedPost = await Post.findByIdAndUpdate(
-        { _id: req.postId },
-        {
-          $set: {
-            title,
-            content,
-            imageUrl,
-            privacy,
-          },
-        },
-        { new: true }
-      );
-      res.status(200).send(updatedPost);
-    } catch (error) {
-      res.status(400).json({
-        Error: error.message,
-      });
-    }
-  })
-  // Delete Post
-  .delete(postIdValidation, checkIfPostExists, async (req, res) => {
-    try {
-      await Post.deleteOne({ _id: req.postId });
-      res.status(200).json({
-        Message: `Post ID: ${req.postId} is now delete`,
-      });
-    } catch (error) {
-      res.status(400).json({
-        Error: error.message,
-      });
-    }
-  });
+  .get(postIdValidation, checkIfPostExists, postController.searchPostById)
+  .patch(postIdValidation, checkIfPostExists, postController.updatePost)
+  .delete(postIdValidation, checkIfPostExists, postController.deletePost);
 
 export default router;
