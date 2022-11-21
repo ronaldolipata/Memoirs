@@ -13,11 +13,16 @@ dotenv.config();
 
 // Use PORT from .env file if exists. Otherwise, use PORT 3000
 const PORT = process.env.PORT || 3000;
-mongoose.connect(process.env.DB_URL);
-
-mongoose.connection.on('open', () => {
-  console.log('Connected');
-});
+mongoose
+  .connect(process.env.DB_UL)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`App is now connected to DB and listening to port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
 app.use(express.json());
 app.use('/users', userRouter);
@@ -28,8 +33,4 @@ app.get('/', (req, res) => {
   res.status(200).json({
     Message: 'Welcome to Memoirs!',
   });
-});
-
-app.listen(PORT, () => {
-  console.log(`App is listening to port ${PORT}`);
 });
