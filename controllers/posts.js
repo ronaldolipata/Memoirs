@@ -31,10 +31,26 @@ const updatePost = async (req, res) => {
   try {
     const updatedPost = await Post.findByIdAndUpdate(
       { _id: req.postId },
-      { ...req.body },
+      { ...req.body, updatedAt: Date.now() },
       { new: true }
     );
     res.status(200).send(updatedPost);
+  } catch (error) {
+    res.status(400).json({
+      Error: error.message,
+    });
+  }
+};
+
+// Soft delete Post
+const softDeletePost = async (req, res) => {
+  try {
+    const softDeletePost = await Post.findByIdAndUpdate(
+      { _id: req.postId },
+      { deletedAt: Date.now() },
+      { new: true }
+    );
+    res.status(200).send(softDeletePost);
   } catch (error) {
     res.status(400).json({
       Error: error.message,
@@ -60,5 +76,6 @@ export default {
   createPost,
   searchPostById,
   updatePost,
+  softDeletePost,
   deletePost,
 };

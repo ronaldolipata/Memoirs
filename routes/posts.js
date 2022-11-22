@@ -20,6 +20,6 @@ router
   .route('/:postId')
   .get(postIdValidation, checkIfPostExists, postController.searchPostById)
   .patch(postIdValidation, checkIfPostExists, postController.updatePost)
-  .delete(postIdValidation, checkIfPostExists, postController.deletePost);
+  .delete(postIdValidation, checkIfPostExists, postController.softDeletePost);
 
 export default router;
