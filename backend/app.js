@@ -5,6 +5,8 @@ import mongoose from 'mongoose';
 import userRouter from './routes/users.js';
 import postRouter from './routes/posts.js';
 import errorHandler from './middleware/errorHandler.js';
+import cors from './middleware/cors.js';
+import helmet from 'helmet';
 
 const app = express();
 
@@ -24,6 +26,8 @@ mongoose
     console.log(error);
   });
 
+app.use(cors);
+app.use(helmet());
 app.use(express.json());
 app.use('/users', userRouter);
 app.use('/posts', postRouter);
