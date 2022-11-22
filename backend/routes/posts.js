@@ -5,6 +5,7 @@ import checkIfUserIdExists from '../middleware/checkIfUserIdExists.js';
 import checkIfPostExists from '../middleware/checkIfPostExists.js';
 import postIdValidation from '../middleware/postIdValidation.js';
 import postController from '../controllers/posts.js';
+import checkIfOwnPost from '../middleware/checkIfOwnPost.js';
 
 const router = express.Router();
 
@@ -18,18 +19,13 @@ router.post(
 
 router
   .route('/:postId')
-  .get(
-    idValidation,
-    checkIfUserIdExists,
-    postIdValidation,
-    checkIfPostExists,
-    postController.searchPostById
-  )
+  .get(postIdValidation, checkIfPostExists, postController.searchPostById)
   .patch(
     idValidation,
     checkIfUserIdExists,
     postIdValidation,
     checkIfPostExists,
+    checkIfOwnPost,
     postController.updatePost
   )
   .delete(
@@ -37,6 +33,7 @@ router
     checkIfUserIdExists,
     postIdValidation,
     checkIfPostExists,
+    checkIfOwnPost,
     postController.softDeletePost
   );
 
