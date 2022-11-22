@@ -33,12 +33,10 @@ const postchema = new Schema({
   updatedAt: {
     type: Date,
     default: null,
-    required: true,
   },
   deletedAt: {
     type: Date,
     default: null,
-    required: true,
   },
 });
 
