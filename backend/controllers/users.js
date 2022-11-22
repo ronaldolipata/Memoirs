@@ -45,17 +45,9 @@ const searchUserByUsername = async (req, res) => {
 
 // Create new User
 const createUser = async (req, res) => {
-  const { firstName, lastName, username, password, email, bio, country } =
-    req.body;
-
   try {
     const newUser = await User.create({
-      firstName,
-      lastName,
-      username,
-      password,
-      email,
-      country,
+      ...req.body,
     });
     res.status(201).json(newUser);
   } catch (error) {

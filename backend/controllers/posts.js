@@ -3,15 +3,11 @@ import Post from '../models/Post.js';
 // Create new Post
 const createPost = async (req, res) => {
   const authorId = req.header('X-USER-ID');
-  const { title, content, imageUrl, privacy } = req.body;
 
   try {
     const newPost = await Post.create({
       authorId,
-      title,
-      content,
-      imageUrl,
-      privacy,
+      ...req.body,
     });
     res.status(201).json(newPost);
   } catch (error) {

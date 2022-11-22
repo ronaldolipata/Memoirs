@@ -9,7 +9,7 @@ const checkIfPostExists = async (req, res, next) => {
 
   if (!postExists) {
     return res.status(404).json({
-      Error: 'No post found',
+      Error: 'Post does not exists',
     });
   }
 
