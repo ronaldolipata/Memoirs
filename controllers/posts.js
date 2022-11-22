@@ -28,19 +28,10 @@ const searchPostById = (req, res) => {
 
 // Update Post
 const updatePost = async (req, res) => {
-  const { title, content, imageUrl, privacy } = req.body;
-
   try {
     const updatedPost = await Post.findByIdAndUpdate(
       { _id: req.postId },
-      {
-        $set: {
-          title,
-          content,
-          imageUrl,
-          privacy,
-        },
-      },
+      { ...req.body },
       { new: true }
     );
     res.status(200).send(updatedPost);
