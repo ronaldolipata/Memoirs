@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import User from './User.js';
 
 const { Schema, model } = mongoose;
 
@@ -6,6 +7,7 @@ const postchema = new Schema({
   authorId: {
     type: mongoose.SchemaTypes.ObjectId,
     required: true,
+    ref: User,
   },
   title: {
     type: String,
@@ -19,14 +21,18 @@ const postchema = new Schema({
     type: String,
     required: true,
   },
+  privacy: {
+    type: String,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: () => Date.now(),
     required: true,
   },
-  privacy: {
-    type: String,
-    required: true,
+  deletedAt: {
+    type: Date,
+    default: null,
   },
 });
 
