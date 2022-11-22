@@ -7,7 +7,11 @@ import userController from '../controllers/users.js';
 
 const router = express.Router();
 
-router.get('/:username', checkIfUserExists, userController.searchByUsername);
+router.get(
+  '/:username',
+  checkIfUserExists,
+  userController.searchUserByUsername
+);
 
 router.post(
   '/create',

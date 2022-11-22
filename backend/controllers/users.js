@@ -1,8 +1,22 @@
 import User from '../models/User.js';
+import Post from '../models/Post.js';
 
 // Search User by Username
-const searchByUsername = (req, res) => {
-  res.status(200).send(req.user);
+const searchUserByUsername = async (req, res) => {
+  // From checkIfUserExists middleware
+  const userDetails = req.user;
+
+  // Get all Posts for User
+  const userPosts = await Post.find({
+    authorId: req.userId,
+  });
+
+  const userProfile = {
+    userDetails,
+    userPosts,
+  };
+
+  res.status(200).json(userProfile);
 };
 
 // Create new User
@@ -20,7 +34,7 @@ const createUser = async (req, res) => {
       bio,
       country,
     });
-    res.status(201).send(newUser);
+    res.status(201).json(newUser);
   } catch (error) {
     res.status(400).json({
       Error: error.message,
@@ -29,6 +43,6 @@ const createUser = async (req, res) => {
 };
 
 export default {
-  searchByUsername,
+  searchUserByUsername,
   createUser,
 };

@@ -13,7 +13,7 @@ const createPost = async (req, res) => {
       imageUrl,
       privacy,
     });
-    res.status(201).send(newPost);
+    res.status(201).json(newPost);
   } catch (error) {
     res.status(400).json({
       Error: error.message,
@@ -23,7 +23,7 @@ const createPost = async (req, res) => {
 
 // Search Post by Post ID
 const searchPostById = (req, res) => {
-  res.status(200).send(req.post);
+  res.status(200).json(req.post);
 };
 
 // Update Post
@@ -34,7 +34,7 @@ const updatePost = async (req, res) => {
       { ...req.body, updatedAt: Date.now() },
       { new: true }
     );
-    res.status(200).send(updatedPost);
+    res.status(200).json(updatedPost);
   } catch (error) {
     res.status(400).json({
       Error: error.message,
@@ -50,7 +50,7 @@ const softDeletePost = async (req, res) => {
       { deletedAt: Date.now() },
       { new: true }
     );
-    res.status(200).send(softDeletePost);
+    res.status(200).json(softDeletePost);
   } catch (error) {
     res.status(400).json({
       Error: error.message,
