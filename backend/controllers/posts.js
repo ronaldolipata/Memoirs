@@ -41,12 +41,14 @@ const updatePost = async (req, res) => {
 // Soft delete Post
 const softDeletePost = async (req, res) => {
   try {
-    const softDeletePost = await Post.findByIdAndUpdate(
+    await Post.findByIdAndUpdate(
       { _id: req.postId },
       { deletedAt: Date.now() },
       { new: true }
     );
-    res.status(200).json(softDeletePost);
+    res.status(200).json({
+      Message: 'Post successfully deleted',
+    });
   } catch (error) {
     res.status(400).json({
       Error: error.message,
