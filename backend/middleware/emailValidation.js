@@ -16,7 +16,7 @@ const emailValidation = async (req, res, next) => {
     const findEmail = await User.findOne({ email: email });
     if (findEmail) {
       return res.status(422).json({
-        Error: `The email address of ${email} is already exists`,
+        Error: 'Email is already exists',
       });
     }
   } catch (error) {
