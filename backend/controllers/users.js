@@ -55,7 +55,6 @@ const createUser = async (req, res) => {
       username,
       password,
       email,
-      bio,
       country,
     });
     res.status(201).json(newUser);

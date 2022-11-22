@@ -26,6 +26,7 @@ const userSchema = new Schema({
   },
   bio: {
     type: String,
+    default: null,
   },
   country: {
     type: String,
