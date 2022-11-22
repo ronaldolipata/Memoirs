@@ -13,10 +13,6 @@ const checkIfUserExists = async (req, res, next) => {
     });
   }
 
-  // const userPosts = await User.populate({
-  //   username: username,
-  // });
-
   req.user = userExists;
   req.userId = userExists._id.valueOf();
 
