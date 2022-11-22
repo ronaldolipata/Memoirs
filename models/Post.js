@@ -30,9 +30,15 @@ const postchema = new Schema({
     default: () => Date.now(),
     required: true,
   },
+  updatedAt: {
+    type: Date,
+    default: null,
+    required: true,
+  },
   deletedAt: {
     type: Date,
     default: null,
+    required: true,
   },
 });
 
