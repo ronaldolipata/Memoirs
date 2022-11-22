@@ -18,8 +18,26 @@ router.post(
 
 router
   .route('/:postId')
-  .get(postIdValidation, checkIfPostExists, postController.searchPostById)
-  .patch(postIdValidation, checkIfPostExists, postController.updatePost)
-  .delete(postIdValidation, checkIfPostExists, postController.softDeletePost);
+  .get(
+    idValidation,
+    checkIfUserIdExists,
+    postIdValidation,
+    checkIfPostExists,
+    postController.searchPostById
+  )
+  .patch(
+    idValidation,
+    checkIfUserIdExists,
+    postIdValidation,
+    checkIfPostExists,
+    postController.updatePost
+  )
+  .delete(
+    idValidation,
+    checkIfUserIdExists,
+    postIdValidation,
+    checkIfPostExists,
+    postController.softDeletePost
+  );
 
 export default router;
