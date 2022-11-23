@@ -15,6 +15,11 @@ const searchUserByUsername = async (req, res) => {
         authorId: mongoose.Types.ObjectId(req.userId),
       },
     },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
   ];
 
   // Push to pipelines if limit is given
