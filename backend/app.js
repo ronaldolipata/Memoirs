@@ -29,8 +29,8 @@ mongoose
 app.use(cors);
 app.use(helmet());
 app.use(express.json());
-app.use('/users', userRouter);
-app.use('/posts', postRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/posts', postRouter);
 app.use(errorHandler);
 
 app.get('/', (req, res) => {
