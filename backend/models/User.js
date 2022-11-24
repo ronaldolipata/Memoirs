@@ -14,6 +14,7 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -23,14 +24,14 @@ const userSchema = new Schema({
     type: String,
     required: true,
     lowercase: true,
+    unique: true,
+  },
+  imageUrl: {
+    type: String,
   },
   bio: {
     type: String,
     default: null,
-  },
-  country: {
-    type: String,
-    required: true,
   },
   createdAt: {
     type: Date,

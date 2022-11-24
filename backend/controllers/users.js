@@ -16,6 +16,11 @@ const searchUserByUsername = async (req, res) => {
       },
     },
     {
+      $match: {
+        deletedAt: null,
+      },
+    },
+    {
       $sort: {
         createdAt: -1,
       },
@@ -23,14 +28,14 @@ const searchUserByUsername = async (req, res) => {
   ];
 
   // Push to pipelines if limit is given
-  if (limit !== undefined || !isNaN(limit)) {
+  if (limit !== undefined || limit !== null || !isNaN(limit)) {
     pipelines.push({
       $limit: parseInt(limit),
     });
   }
 
   // Push to pipelines if offset is given
-  if (offset !== undefined || !isNaN(offset)) {
+  if (offset !== undefined || offset !== null || !isNaN(offset)) {
     pipelines.push({
       $skip: parseInt(offset),
     });

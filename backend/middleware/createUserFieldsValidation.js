@@ -27,11 +27,6 @@ const createUserFieldsValidation = (req, res, next) => {
       Error: 'Email is required',
     });
   }
-  if (!country) {
-    return res.status(422).json({
-      Error: 'Country is required',
-    });
-  }
 
   next();
 };

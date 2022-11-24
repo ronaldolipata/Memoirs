@@ -13,6 +13,7 @@ const checkIfPostExists = async (req, res, next) => {
     });
   }
 
+  // Pass the data of Post to req.post if existed
   req.post = postExists;
   req.postId = postId;
 

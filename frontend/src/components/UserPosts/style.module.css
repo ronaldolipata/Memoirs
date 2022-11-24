@@ -1,0 +1,11 @@
+.postsContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.card {
+  min-height: 240px;
+  width: 280px;
+}
