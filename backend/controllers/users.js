@@ -68,6 +68,7 @@ const createUser = async (req, res) => {
 };
 
 export default {
+  uploaded,
   searchUserByUsername,
   createUser,
 };

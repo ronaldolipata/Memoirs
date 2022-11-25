@@ -4,8 +4,11 @@ import emailValidation from '../middleware/emailValidation.js';
 import usernameValidation from '../middleware/usernameValidation.js';
 import checkIfUserExists from '../middleware/checkIfUserExists.js';
 import userController from '../controllers/users.js';
+import postController from '../controllers/posts.js';
 
 const router = express.Router();
+
+router.post('/:username/post', checkIfUserExists, postController.createPost);
 
 router.get(
   '/:username',

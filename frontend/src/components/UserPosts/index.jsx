@@ -15,16 +15,11 @@ export default function GradientCover() {
       {posts.length === 0 ? (
         <p>No post available</p>
       ) : (
-        posts.map(({ _id, title, content }) => (
+        posts.map(({ _id, title, imageUrl }) => (
           <div key={_id}>
             <Card className={style.card}>
               <CardCover>
-                <img
-                  src="https://images.unsplash.com/photo-1542773998-9325f0a098d7?auto=format&fit=crop&w=320"
-                  srcSet="https://images.unsplash.com/photo-1542773998-9325f0a098d7?auto=format&fit=crop&w=320&dpr=2 2x"
-                  loading="lazy"
-                  alt=""
-                />
+                <img src={imageUrl} loading="lazy" alt="" />
               </CardCover>
               <CardCover
                 sx={{

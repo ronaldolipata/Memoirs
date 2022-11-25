@@ -1,15 +1,31 @@
+import mongoose from 'mongoose';
 import Post from '../models/Post.js';
+import cloudinaryV2 from '../utils/cloudinary.js';
 
 // Create new Post
 const createPost = async (req, res) => {
   const authorId = req.header('X-USER-ID');
+  const { username, title, content } = req.body;
 
   try {
-    const newPost = await Post.create({
-      authorId,
-      ...req.body,
+    const result = await cloudinaryV2.uploader.upload(req.body.image, {
+      folder: 'Memoirs',
+      // width: 320,
+      // crop: 'scale',
     });
-    res.status(201).json(newPost);
+
+    await Post.create({
+      // authorId,
+      authorId: mongoose.Types.ObjectId('637e9721ee5d1bd3242dfc94'),
+      title,
+      content,
+      imageUrl: result.url,
+      privacy: 'Public',
+    });
+    // res.status(201).json(newPost);
+    res.writeHead(302, {
+      Location: `http://127.0.0.1:5173/${username}`,
+    });
   } catch (error) {
     res.status(400).json({
       Error: error.message,

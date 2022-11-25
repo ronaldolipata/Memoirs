@@ -1,0 +1,14 @@
+.loginContainer {
+  height: calc(100vh - 5rem);
+  display: grid;
+  place-content: center;
+  gap: 0.5rem;
+}
+
+.inputText,
+.inputPassword {
+  width: 15rem;
+  font-size: 1rem;
+  padding: 0.562rem;
+  text-align: center;
+}

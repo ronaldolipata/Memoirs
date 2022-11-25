@@ -5,7 +5,7 @@ export const UserContext = createContext();
 
 const UserContextComponent = ({ children }) => {
   const initialState = {
-    user: '',
+    user: {},
     posts: [],
   };
 
@@ -31,6 +31,7 @@ const UserContextComponent = ({ children }) => {
         appendUserDetails,
         appendUserPosts,
         user: state.user,
+        userId: state.user._id,
         posts: state.posts,
       }}
     >
