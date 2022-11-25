@@ -33,10 +33,6 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postRouter);
 app.use(errorHandler);
 
-// app.use(express.static(path.join('public')));
-// app.use('/static', express.static('/public'));
-app.use(express.static('/public'));
-
 app.get('/', (req, res) => {
   res.status(200).json({
     Message: 'Welcome to Memoirs!',
