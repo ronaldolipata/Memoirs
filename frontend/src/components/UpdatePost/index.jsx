@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import style from '@/components/UpdatePost/style.module.css';
 import NavBar from '@/components/NavBar';
-import { useEffect } from 'react';
 
 const UpdatePost = () => {
   const [title, setTitle] = useState();

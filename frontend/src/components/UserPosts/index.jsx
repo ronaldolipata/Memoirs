@@ -8,36 +8,66 @@ import { UserContext } from '@/UserContext';
 import style from '@/components/UserPosts/style.module.css';
 
 const UserPosts = () => {
-  const { posts } = useContext(UserContext);
+  const { username, posts, searchedUsername, searchedUserPosts } =
+    useContext(UserContext);
 
   return (
     <div className={style.postsContainer}>
-      {posts.length === 0 ? (
-        <p>No post available</p>
-      ) : (
-        posts.map(({ _id, title, imageUrl }) => (
-          <div key={_id}>
-            <Link to={`post/${_id}`}>
-              <Card className={style.card}>
-                <CardCover>
-                  <img src={imageUrl} loading="lazy" alt="" />
-                </CardCover>
-                <CardCover
-                  sx={{
-                    background:
-                      'linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)',
-                  }}
-                />
-                <CardContent sx={{ justifyContent: 'flex-end' }}>
-                  <Typography level="h2" fontSize="lg" textColor="#fff" mb={1}>
-                    {title}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Link>
-          </div>
-        ))
-      )}
+      {username !== null && searchedUsername === username
+        ? posts.map(({ _id, title, content, imageUrl }) => (
+            <div key={_id}>
+              <Link to={`post/${_id}`}>
+                <Card className={style.card}>
+                  <CardCover>
+                    <img src={imageUrl} loading="lazy" alt="" />
+                  </CardCover>
+                  <CardCover
+                    sx={{
+                      background:
+                        'linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)',
+                    }}
+                  />
+                  <CardContent sx={{ justifyContent: 'flex-end' }}>
+                    <Typography
+                      level="h2"
+                      fontSize="lg"
+                      textColor="#fff"
+                      mb={1}
+                    >
+                      {title}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+          ))
+        : searchedUserPosts.map(({ _id, title, content, imageUrl }) => (
+            <div key={_id}>
+              <Link to={`post/${_id}`}>
+                <Card className={style.card}>
+                  <CardCover>
+                    <img src={imageUrl} loading="lazy" alt="" />
+                  </CardCover>
+                  <CardCover
+                    sx={{
+                      background:
+                        'linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)',
+                    }}
+                  />
+                  <CardContent sx={{ justifyContent: 'flex-end' }}>
+                    <Typography
+                      level="h2"
+                      fontSize="lg"
+                      textColor="#fff"
+                      mb={1}
+                    >
+                      {title}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+          ))}
     </div>
   );
 };

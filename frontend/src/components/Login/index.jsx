@@ -1,41 +1,73 @@
-import { useState } from 'react';
+import { useState, useRef, useContext } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { UserContext } from '@/UserContext';
 import style from '@/components/Login/style.module.css';
 import NavBar from '@/components/NavBar';
 
 const Login = () => {
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
+  const {
+    appendUserDetails,
+    appendUserPosts,
+    appendUserId,
+    appendUsername,
+    username,
+    appendUsernameParams,
+  } = useContext(UserContext);
+
   const [hashedPassword, setHashedPassword] = useState();
-  const [user, userDetails] = useState();
+  const [loginError, setLoginError] = useState(null);
 
-  const usernameOnChange = (event) => {
-    setUsername(event.target.value);
-  };
+  const refUsername = useRef(null);
+  const refPassword = useRef(null);
 
-  const passwordOnChange = (event) => {
-    setPassword(event.target.value);
+  const navigate = useNavigate();
+
+  // Get limit and offset queries
+  const search = useLocation().search;
+  const limit = parseInt(new URLSearchParams(search).get('limit')) || 6;
+  const offset = parseInt(new URLSearchParams(search).get('offset')) || 0;
+
+  const inputValidation = () => {
+    if (refUsername.current.value === '') {
+      return setLoginError('Please enter your username.');
+    }
+
+    if (refPassword.current.value === '') {
+      return setLoginError('Please enter your password.');
+    }
+
+    loginUser();
   };
 
   const loginUser = async () => {
-    // const formData = {
-    //   username,
-    //   password,
-    // };
-
     try {
-      await fetch(`http://localhost:5000/api/v1/users/login`);
-      // const response = await fetch(`http://localhost:5000/api/v1/users/login`);
-      // const data = await response.json();
-      // userDetails(data.userDetails);
-    } catch (error) {
-      console.log(error);
-    }
+      const response = await fetch(
+        `http://localhost:5000/api/v1/users/${refUsername.current.value}?limit=${limit}&offset=${offset}`
+      );
+      const data = await response.json();
 
-    // try {
-    //   await fetch(`http://localhost:5000/api/v1/users/login`);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+      if (data.Error === 'No User found') {
+        return setLoginError('Invalid Username');
+      }
+
+      if (data.userDetails.password !== refPassword.current.value) {
+        return setLoginError('Invalid Password');
+      }
+
+      // Save User's data to UserContext
+      appendUserDetails(data.userDetails);
+      appendUserPosts(data.userPosts);
+      appendUserId(data.userDetails.userId);
+      appendUsername(data.userDetails.username);
+      appendUsernameParams(data.userDetails.username);
+
+      setLoginError(null);
+
+      // Navigate to User profile once logged in
+      navigate(`/${username}`);
+    } catch (error) {
+      return setLoginError(error);
+    }
   };
 
   return (
@@ -43,22 +75,23 @@ const Login = () => {
       <NavBar></NavBar>
       <form className={style.loginContainer}>
         <input
-          onChange={usernameOnChange}
+          ref={refUsername}
           className={style.inputText}
           type="text"
           name="username"
           placeholder="Username"
         />
         <input
-          onChange={passwordOnChange}
+          ref={refPassword}
           className={style.inputText}
           type="password"
           name="password"
           placeholder="Password"
         />
-        <button onClick={loginUser} type="button">
+        <button onClick={inputValidation} type="button">
           Login
         </button>
+        {loginError && <p>{loginError}</p>}
       </form>
     </>
   );

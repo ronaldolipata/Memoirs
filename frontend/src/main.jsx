@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
-import App from '@/App';
+import App from '@/components/App';
 import '@/index.css';
 import UserContextComponent from '@/UserContext';
 import Login from '@/components/Login';
@@ -19,9 +19,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/" element={<App />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/:username" element={<UserProfile />} />
-          <Route path="/:username/post" element={<CreatePost />} />
-          <Route path="/:username/post/:postId" element={<ViewPost />} />
+          <Route path="/:usernameParams" element={<UserProfile />} />
+          <Route path="/:usernameParams/post" element={<CreatePost />} />
+          <Route path="/:usernameParams/post/:postId" element={<ViewPost />} />
           <Route
             path="/:username/post/:postId/update"
             element={<UpdatePost />}
