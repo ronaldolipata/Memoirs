@@ -8,7 +8,15 @@ import postController from '../controllers/posts.js';
 
 const router = express.Router();
 
-router.post('/:username/post', checkIfUserExists, postController.createPost);
+router.post(
+  '/register',
+  createUserFieldsValidation,
+  usernameValidation,
+  emailValidation,
+  userController.createUser
+);
+
+router.get('/login', checkIfUserExists, userController.loginUser);
 
 router.get(
   '/:username',
@@ -16,12 +24,6 @@ router.get(
   userController.searchUserByUsername
 );
 
-router.post(
-  '/create',
-  createUserFieldsValidation,
-  usernameValidation,
-  emailValidation,
-  userController.createUser
-);
+router.post('/:username/post', checkIfUserExists, postController.createPost);
 
 export default router;

@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import style from '@/components/Post/style.module.css';
+import { useParams, useLocation } from 'react-router-dom';
+import style from '@/components/CreatePost/style.module.css';
 import NavBar from '@/components/NavBar';
+import { useEffect } from 'react';
 
-const Post = () => {
+const CreatePost = () => {
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
   const [image, setImage] = useState();
+  const [userId, setUserId] = useState();
 
   const { username } = useParams();
 
@@ -31,8 +33,26 @@ const Post = () => {
     setContent(event.target.value);
   };
 
+  // Get limit and offset queries
+  const search = useLocation().search;
+  const limit = parseInt(new URLSearchParams(search).get('limit')) || 6;
+  const offset = parseInt(new URLSearchParams(search).get('offset')) || 0;
+
+  const getUserProfile = async (username, limit, offset) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/v1/users/${username}?limit=${limit}&offset=${offset}`
+      );
+      const data = await response.json();
+      setUserId(data.userDetails._id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const uploadPost = async () => {
     const formData = {
+      userId,
       username,
       title,
       content,
@@ -45,7 +65,7 @@ const Post = () => {
         body: JSON.stringify(formData),
         headers: {
           'Content-Type': 'application/json',
-          'X-USER-ID': '637e9721ee5d1bd3242dfc94',
+          'X-USER-ID': userId,
         },
       });
     } catch (error) {
@@ -53,16 +73,20 @@ const Post = () => {
     }
   };
 
-  const action = `/${username}/post`;
+  // const action = `/${username}/post`;
+
+  useEffect(() => {
+    getUserProfile(username, limit, offset);
+  }, [username]);
 
   return (
     <>
       <NavBar></NavBar>
       <form
-        className={style.postContainer}
-        method="POST"
-        action={action}
-        encType="multipart/form-data"
+        className={style.createPostContainer}
+        // method="POST"
+        // action={action}
+        // encType="multipart/form-data"
       >
         <p className={style.formTitle}>Post Memories or Tell Stories</p>
         <input
@@ -94,4 +118,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default CreatePost;

@@ -1,6 +1,58 @@
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import asyncHandler from 'express-async-handler';
+import cloudinaryV2 from '../utils/cloudinary.js';
 import User from '../models/User.js';
 import Post from '../models/Post.js';
+
+// Create new User
+const createUser = asyncHandler(async (req, res) => {
+  const { password, image } = req.body;
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const result = await cloudinaryV2.uploader.upload(image, {
+    folder: 'Memoirs',
+  });
+
+  try {
+    const newUser = await User.create({
+      ...req.body,
+      password: hashedPassword,
+      imageUrl: result.url,
+    });
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(400).json({
+      Error: error.message,
+    });
+  }
+});
+
+// Login User
+const loginUser = asyncHandler(async (req, res) => {
+  const { username, password } = req.body;
+
+  console.log(username, password);
+
+  try {
+    const user = await User.findOne({
+      username,
+    });
+
+    const hashedPassword = user.password;
+
+    if (user && (await bcrypt.compare(password, hashedPassword))) {
+      console.log(user);
+      res.status(200).json(user);
+    }
+  } catch (error) {
+    res.status(400).json({
+      Error: error.message,
+    });
+  }
+});
 
 // Search User by Username
 const searchUserByUsername = async (req, res) => {
@@ -53,21 +105,8 @@ const searchUserByUsername = async (req, res) => {
   res.status(200).json(userProfile);
 };
 
-// Create new User
-const createUser = async (req, res) => {
-  try {
-    const newUser = await User.create({
-      ...req.body,
-    });
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(400).json({
-      Error: error.message,
-    });
-  }
-};
-
 export default {
   searchUserByUsername,
   createUser,
+  loginUser,
 };

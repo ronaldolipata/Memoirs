@@ -16,13 +16,19 @@
 
 body {
   margin: 0;
-  /* display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh; */
 }
 
 button {
   font-family: 'Poppins', sans-serif;
   padding: 0.5rem 2rem;
+}
+
+textarea,
+input[type='text'] {
+  font-family: 'Poppins', sans-serif;
+}
+
+a {
+  color: rgba(255, 255, 255, 0.87);
+  text-decoration: none;
 }

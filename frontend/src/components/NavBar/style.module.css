@@ -34,5 +34,9 @@
 .searchInput {
   width: 15rem;
   font-size: 1rem;
-  padding: 0.562rem;
+  padding: 0.35rem 0.5rem;
+}
+
+.searchLink {
+  display: block;
 }

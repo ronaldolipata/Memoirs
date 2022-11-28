@@ -5,27 +5,23 @@ import cloudinaryV2 from '../utils/cloudinary.js';
 // Create new Post
 const createPost = async (req, res) => {
   const authorId = req.header('X-USER-ID');
-  const { username, title, content } = req.body;
+  const { userId, username, title, content, image } = req.body;
 
   try {
     const result = await cloudinaryV2.uploader.upload(req.body.image, {
       folder: 'Memoirs',
-      // width: 320,
-      // crop: 'scale',
     });
 
     await Post.create({
-      // authorId,
-      authorId: mongoose.Types.ObjectId('637e9721ee5d1bd3242dfc94'),
-      title,
-      content,
+      authorId: req.userId,
+      ...req.body,
       imageUrl: result.url,
       privacy: 'Public',
     });
     // res.status(201).json(newPost);
-    res.writeHead(302, {
-      Location: `http://127.0.0.1:5173/${username}`,
-    });
+    // res.writeHead(302, {
+    //   Location: `http://127.0.0.1:5173/${username}`,
+    // });
   } catch (error) {
     res.status(400).json({
       Error: error.message,
@@ -41,9 +37,13 @@ const searchPostById = (req, res) => {
 // Update Post
 const updatePost = async (req, res) => {
   try {
+    const result = await cloudinaryV2.uploader.upload(req.body.image, {
+      folder: 'Memoirs',
+    });
+
     const updatedPost = await Post.findByIdAndUpdate(
       { _id: req.postId },
-      { ...req.body, updatedAt: Date.now() },
+      { ...req.body, imageUrl: result.url, updatedAt: Date.now() },
       { new: true }
     );
     res.status(200).json(updatedPost);

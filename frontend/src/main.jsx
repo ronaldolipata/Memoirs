@@ -5,8 +5,11 @@ import App from '@/App';
 import '@/index.css';
 import UserContextComponent from '@/UserContext';
 import Login from '@/components/Login';
+import Register from '@/components/Register';
 import UserProfile from '@/components/UserProfile';
-import Post from '@/components/Post';
+import CreatePost from '@/components/CreatePost';
+import ViewPost from '@/components/ViewPost';
+import UpdatePost from '@/components/UpdatePost';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <UserContextComponent>
@@ -14,9 +17,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/:username" element={<UserProfile />} />
-          <Route path="/:username/post" element={<Post />} />
+          <Route path="/:username/post" element={<CreatePost />} />
+          <Route path="/:username/post/:postId" element={<ViewPost />} />
+          <Route
+            path="/:username/post/:postId/update"
+            element={<UpdatePost />}
+          />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>

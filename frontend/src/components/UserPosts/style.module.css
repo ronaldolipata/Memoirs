@@ -8,4 +8,5 @@
 .card {
   min-height: 300px;
   width: 340px;
+  cursor: pointer;
 }
