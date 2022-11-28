@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Card from '@mui/joy/Card';
 import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
@@ -8,12 +8,13 @@ import { UserContext } from '@/UserContext';
 import style from '@/components/UserPosts/style.module.css';
 
 const UserPosts = () => {
-  const { username, posts, searchedUsername, searchedUserPosts } =
-    useContext(UserContext);
+  const { user, username, posts, searchedUserPosts } = useContext(UserContext);
+
+  const { usernameParams } = useParams();
 
   return (
     <div className={style.postsContainer}>
-      {username !== null && searchedUsername === username
+      {username !== null && usernameParams === username
         ? posts.map(({ _id, title, content, imageUrl }) => (
             <div key={_id}>
               <Link to={`post/${_id}`}>

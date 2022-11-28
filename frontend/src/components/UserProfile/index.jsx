@@ -20,20 +20,6 @@ function UserProfile() {
     searchedUsername,
   } = useContext(UserContext);
 
-  // const displayUserPosts = () => {
-  //   if (usernameParams === username) {
-  //     if (posts.length === 0) {
-  //       return <p>No post available</p>;
-  //     }
-  //     return <UserPosts />;
-  //   }
-
-  //   if (searchedUserPost.length === 0) {
-  //     return <p>No post available</p>;
-  //   }
-  //   return <UserPosts />;
-  // };
-
   const { usernameParams } = useParams();
 
   // Get limit and offset queries
@@ -75,7 +61,7 @@ function UserProfile() {
       <div className={style.container}>
         <img
           src={
-            username !== null && searchedUsername === username
+            username !== null && usernameParams === username
               ? user.imageUrl
               : searchedUser.imageUrl
           }
@@ -84,7 +70,7 @@ function UserProfile() {
         />
         <div className={style.userDetails}>
           <p className={`${style.fontBold} ${style.name}`}>
-            {username !== null && searchedUsername === username
+            {username !== null && usernameParams === username
               ? `${user.firstName} ${user.lastName}`
               : `${searchedUser.firstName} ${searchedUser.lastName}`}
           </p>
@@ -107,7 +93,7 @@ function UserProfile() {
             Edit profile
           </button>
           <div className={style.bioContainer}>
-            {username !== null && searchedUsername === username ? (
+            {username !== null && usernameParams === username ? (
               user.bio === null ? (
                 <p>Edit your profile to add bio</p>
               ) : (

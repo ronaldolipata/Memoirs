@@ -64,7 +64,7 @@ const Login = () => {
       setLoginError(null);
 
       // Navigate to User profile once logged in
-      navigate(`/${username}`);
+      navigate(`/${refUsername.current.value}`);
     } catch (error) {
       return setLoginError(error);
     }

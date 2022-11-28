@@ -1,19 +1,18 @@
 import { useState, useContext, useRef } from 'react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
 import style from '@/components/NavBar/style.module.css';
 
 const NavBar = () => {
   const {
+    user,
+    username,
     appendSearchedUserDetails,
     appendSearchedUserPosts,
     appendSearchedUserId,
     appendSearchedUsername,
-    username,
-    searchedUserId,
   } = useContext(UserContext);
 
-  // const [searchUsername, setSearchUsername] = useState();
   const refSearchUsername = useRef(null);
 
   const [loginError, setLoginError] = useState(null);
@@ -21,11 +20,15 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   const homeNavigation = () => {
-    navigate('/');
+    if (username === null) {
+      return navigate('/');
+    }
+    navigate(`/${username}`);
   };
 
-  const uploadNavigation = () => {
-    navigate(`/${username}/post`);
+  const profileNavigation = () => {
+    refSearchUsername.current.value = '';
+    navigate(`/${username}`);
   };
 
   // Get limit and offset queries
@@ -80,14 +83,20 @@ const NavBar = () => {
           >
             Search
           </button>
-          {searchedUserId && (
-            <button
-              className={style.searchButton}
-              onClick={uploadNavigation}
-              type="button"
-            >
-              Upload
-            </button>
+
+          {/* Show upload and user profile picture if logged in */}
+          {username && (
+            <>
+              <Link to={`/${username}/post`} className={style.uploadLink}>
+                Upload
+              </Link>
+              <img
+                onClick={profileNavigation}
+                src={user.imageUrl}
+                alt="profile picture"
+                className={style.profilePicture}
+              />
+            </>
           )}
         </div>
       </nav>
