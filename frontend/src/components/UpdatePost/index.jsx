@@ -1,32 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
+import { UserContext } from '@/UserContext';
 import style from '@/components/UpdatePost/style.module.css';
 import NavBar from '@/components/NavBar';
 
 const UpdatePost = () => {
-  const [title, setTitle] = useState();
-  const [content, setContent] = useState();
-  const [image, setImage] = useState();
-  const [userId, setUserId] = useState();
+  const { user, posts, userId, username } = useContext(UserContext);
 
   const location = useLocation();
-  const { oldTitle, oldContent } = location.state;
+  const { previousTitle, previousContent, imageUrl } = location.state;
 
-  const { username } = useParams();
+  const [title, setTitle] = useState(previousTitle);
+  const [content, setContent] = useState(previousContent);
+
   const { postId } = useParams();
-
-  const fileOnChange = (event) => {
-    const file = event.target.files[0];
-    setFileToBase(file);
-  };
-
-  const setFileToBase = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setImage(reader.result);
-    };
-  };
 
   const titleOnChange = (event) => {
     setTitle(event.target.value);
@@ -36,30 +23,12 @@ const UpdatePost = () => {
     setContent(event.target.value);
   };
 
-  // Get limit and offset queries
-  const search = useLocation().search;
-  const limit = parseInt(new URLSearchParams(search).get('limit')) || 6;
-  const offset = parseInt(new URLSearchParams(search).get('offset')) || 0;
-
-  const getUserProfile = async (username, limit, offset) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/users/${username}?limit=${limit}&offset=${offset}`
-      );
-      const data = await response.json();
-      setUserId(data.userDetails._id);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const updatePost = async () => {
     const formData = {
       userId,
       username,
       title,
       content,
-      image,
     };
 
     try {
@@ -79,44 +48,43 @@ const UpdatePost = () => {
 
   const action = `/${username}/post`;
 
-  useEffect(() => {
-    getUserProfile(username, limit, offset);
-  }, [username]);
+  // useEffect(() => {
+  //   getUserProfile(username);
+  // }, [username]);
 
   return (
     <>
       <NavBar></NavBar>
+      <p className={style.formTitle}>Update post</p>
       <form
         className={style.createPostContainer}
         method="POST"
         action={action}
         encType="multipart/form-data"
       >
-        <p className={style.formTitle}>Post Memories or Tell Stories</p>
-        <input
-          className={style.inputText}
-          onChange={titleOnChange}
-          type="text"
-          placeholder={oldTitle}
-        />
-        <textarea
-          className={style.textArea}
-          onChange={contentOnChange}
-          name="content"
-          id="content"
-          cols="30"
-          rows="10"
-          placeholder={oldContent}
-        ></textarea>
-        <input
-          className={style.inputFile}
-          onChange={fileOnChange}
-          type="file"
-          name="image"
-        />
-        <button onClick={updatePost} type="button">
-          Submit
-        </button>
+        <img className={style.image} src={imageUrl} alt="image post" />
+        <div className={style.rightSide}>
+          <input
+            className={style.inputText}
+            onChange={titleOnChange}
+            type="text"
+            // placeholder={previousTitle}
+            defaultValue={title}
+          />
+          <textarea
+            className={style.textArea}
+            onChange={contentOnChange}
+            name="content"
+            id="content"
+            cols="30"
+            rows="10"
+            // placeholder={previousContent}
+            defaultValue={content}
+          ></textarea>
+          <button onClick={updatePost} type="button">
+            Submit
+          </button>
+        </div>
       </form>
     </>
   );
