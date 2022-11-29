@@ -5,23 +5,13 @@ import style from '@/components/ViewPost/style.module.css';
 import NavBar from '@/components/NavBar';
 
 const ViewPost = () => {
-  const {
-    user,
-    posts,
-    userId,
-    username,
-    searchedUserId,
-    searchedUsername,
-    searchedUser,
-    searchedUserPosts,
-  } = useContext(UserContext);
+  const { userId, username } = useContext(UserContext);
 
   const { usernameParams } = useParams();
 
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
   const [imageUrl, setImageUrl] = useState();
-  // const [userProfilePictureUrl, setUserProfilePictureUrl] = useState();
 
   const { postId } = useParams();
 
@@ -56,7 +46,6 @@ const ViewPost = () => {
 
   useEffect(() => {
     getPostData(postId);
-    // getUserData(username, limit, offset);
   }, [username]);
 
   return (
