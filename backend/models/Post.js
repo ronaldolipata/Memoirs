@@ -19,7 +19,6 @@ const postchema = new Schema({
   },
   imageUrl: {
     type: String,
-    required: true,
   },
   privacy: {
     type: String,

@@ -6,47 +6,75 @@ import UserPosts from '@/components/UserPosts';
 import NavBar from '@/components/NavBar';
 
 function UserProfile() {
-  const { appendUserDetails, appendUserPosts, user, posts } =
-    useContext(UserContext);
+  const {
+    user,
+    posts,
+    userId,
+    username,
+    appendSearchedUserDetails,
+    appendSearchedUserPosts,
+    appendSearchedUserId,
+    appendSearchedUsername,
+    searchedUser,
+    searchedUserPosts,
+    searchedUsername,
+  } = useContext(UserContext);
 
-  const { username } = useParams();
+  const { usernameParams } = useParams();
 
   // Get limit and offset queries
   const search = useLocation().search;
   const limit = parseInt(new URLSearchParams(search).get('limit')) || 6;
   const offset = parseInt(new URLSearchParams(search).get('offset')) || 0;
 
-  const getUserProfile = async (username, limit, offset) => {
+  const getUserProfile = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/${username}?limit=${limit}&offset=${offset}`
+        `http://localhost:5000/api/v1/users/${usernameParams}?limit=${limit}&offset=${offset}`
       );
       const data = await response.json();
-      appendUserDetails(data.userDetails);
-      appendUserPosts(data.userPosts);
+
+      // if (data.Error === 'No User found') {
+      //   return setLoginError('Invalid Username');
+      // }
+
+      // Save User's data to UserContext
+      appendSearchedUserDetails(data.userDetails);
+      appendSearchedUserPosts(data.userPosts);
+      appendSearchedUserId(data.userDetails.userId);
+      appendSearchedUsername(data.userDetails.username);
     } catch (error) {
+      // return setLoginError(error);
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getUserProfile(username, limit, offset);
-  }, [username]);
+    if (searchedUsername && username === null) {
+      getUserProfile();
+    }
+  }, []);
 
   return (
     <>
       <NavBar></NavBar>
-      <div className="container">
+      <div className={style.container}>
         <img
-          src={user.imageUrl}
+          src={
+            username !== null && usernameParams === username
+              ? user.imageUrl
+              : searchedUser.imageUrl
+          }
           alt="profile picture"
           className={style.profilePicture}
         />
         <div className={style.userDetails}>
           <p className={`${style.fontBold} ${style.name}`}>
-            {user.firstName} {user.lastName}
+            {username !== null && usernameParams === username
+              ? `${user.firstName} ${user.lastName}`
+              : `${searchedUser.firstName} ${searchedUser.lastName}`}
           </p>
-          <p className={style.username}>@{username}</p>
+          <p className={style.username}>@{usernameParams}</p>
           <div className={`${style.flexRowCenter} ${style.followAndLikes}`}>
             <div>
               <p className={style.fontBold}>36</p>
@@ -65,16 +93,20 @@ function UserProfile() {
             Edit profile
           </button>
           <div className={style.bioContainer}>
-            {user.bio === null ? (
+            {username !== null && usernameParams === username ? (
+              user.bio === null ? (
+                <p>Edit your profile to add bio</p>
+              ) : (
+                <p>{user.bio}</p>
+              )
+            ) : searchedUser.bio === null ? (
               <p>Edit your profile to add bio</p>
             ) : (
-              <p>{user.bio}</p>
+              <p>{searchedUser.bio}</p>
             )}
           </div>
         </div>
-        <div>
-          {posts.length === 0 ? <p>No post available</p> : <UserPosts />}
-        </div>
+        <UserPosts></UserPosts>
       </div>
     </>
   );

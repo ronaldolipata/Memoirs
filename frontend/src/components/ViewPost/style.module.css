@@ -1,9 +1,10 @@
 .postContainer {
-  width: 30rem;
+  /* width: 30rem; */
   height: calc(100vh - 5rem);
   margin-inline: auto;
   display: grid;
   place-content: center;
+  grid-template-columns: 1fr 1fr;
 }
 
 .image {

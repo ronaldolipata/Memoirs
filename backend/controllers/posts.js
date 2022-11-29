@@ -5,7 +5,6 @@ import cloudinaryV2 from '../utils/cloudinary.js';
 // Create new Post
 const createPost = async (req, res) => {
   const authorId = req.header('X-USER-ID');
-  const { userId, username, title, content, image } = req.body;
 
   try {
     const result = await cloudinaryV2.uploader.upload(req.body.image, {
@@ -37,13 +36,9 @@ const searchPostById = (req, res) => {
 // Update Post
 const updatePost = async (req, res) => {
   try {
-    const result = await cloudinaryV2.uploader.upload(req.body.image, {
-      folder: 'Memoirs',
-    });
-
     const updatedPost = await Post.findByIdAndUpdate(
       { _id: req.postId },
-      { ...req.body, imageUrl: result.url, updatedAt: Date.now() },
+      { ...req.body, updatedAt: Date.now() },
       { new: true }
     );
     res.status(200).json(updatedPost);

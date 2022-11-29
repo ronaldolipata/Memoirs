@@ -23,12 +23,13 @@
 .logo {
   font-family: 'Berkshire Swash', 'Poppins', serif;
   font-size: 1.85rem;
+  cursor: pointer;
 }
 
 .navRightSide {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1em;
 }
 
 .searchInput {
@@ -37,6 +38,14 @@
   padding: 0.35rem 0.5rem;
 }
 
-.searchLink {
-  display: block;
+.uploadLink {
+  margin: 0 1rem 0 2rem;
+}
+
+.profilePicture {
+  height: 2.5rem;
+  width: 2.5rem;
+  object-fit: cover;
+  border-radius: 100%;
+  cursor: pointer;
 }
