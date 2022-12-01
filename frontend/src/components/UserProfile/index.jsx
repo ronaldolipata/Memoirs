@@ -89,21 +89,23 @@ function UserProfile() {
                   <p>Like</p>
                 </div>
               </div>
-              <Link
-                to="update"
-                state={{
-                  previousFirstName: firstName,
-                  previousLastName: lastName,
-                  previousUsername: username,
-                  previousPassword: password,
-                  previousEmail: email,
-                  previousImageUrl: imageUrl,
-                  previousBio: bio,
-                }}
-                className={style.editProfile}
-              >
-                Edit profile
-              </Link>
+              {username !== null && usernameParams === username ? (
+                <Link
+                  to="update"
+                  state={{
+                    previousFirstName: firstName,
+                    previousLastName: lastName,
+                    previousUsername: username,
+                    previousPassword: password,
+                    previousEmail: email,
+                    previousImageUrl: imageUrl,
+                    previousBio: bio,
+                  }}
+                  className={style.editProfile}
+                >
+                  Edit profile
+                </Link>
+              ) : null}
               <div className={style.bioContainer}>
                 {username !== null && usernameParams === username ? (
                   user.bio === null ? (
@@ -112,7 +114,7 @@ function UserProfile() {
                     <p>{user.bio}</p>
                   )
                 ) : searchedUser.bio === null ? (
-                  <p>Edit your profile to add bio</p>
+                  <p>No bio</p>
                 ) : (
                   <p>{searchedUser.bio}</p>
                 )}
