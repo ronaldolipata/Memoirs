@@ -1,16 +1,17 @@
-import { useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '@/UserContext';
 import style from '@/components/CreatePost/style.module.css';
 import NavBar from '@/components/NavBar';
-import { useEffect } from 'react';
 
 const CreatePost = () => {
+  const { userId, username, updateUserData } = useContext(UserContext);
+
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
   const [image, setImage] = useState();
-  const [userId, setUserId] = useState();
 
-  const { username } = useParams();
+  const navigate = useNavigate();
 
   const fileOnChange = (event) => {
     const file = event.target.files[0];
@@ -33,23 +34,6 @@ const CreatePost = () => {
     setContent(event.target.value);
   };
 
-  // Get limit and offset queries
-  const search = useLocation().search;
-  const limit = parseInt(new URLSearchParams(search).get('limit')) || 6;
-  const offset = parseInt(new URLSearchParams(search).get('offset')) || 0;
-
-  const getUserProfile = async (username, limit, offset) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/users/${username}?limit=${limit}&offset=${offset}`
-      );
-      const data = await response.json();
-      setUserId(data.userDetails._id);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const uploadPost = async () => {
     const formData = {
       userId,
@@ -60,34 +44,34 @@ const CreatePost = () => {
     };
 
     try {
-      await fetch(`http://localhost:5000/api/v1/users/${username}/post`, {
-        method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json',
-          'X-USER-ID': userId,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/v1/users/${username}/post`,
+        {
+          method: 'POST',
+          body: JSON.stringify(formData),
+          headers: {
+            'Content-Type': 'application/json',
+            'X-USER-ID': userId,
+          },
+        }
+      );
+      const data = await response.json();
+
+      if (data.Message === 'Successfully uploaded') {
+        // Update User Data to UserContext
+        updateUserData(username);
+        // Navigate to User profile after uploading
+        navigate(`/${username}`);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  // const action = `/${username}/post`;
-
-  useEffect(() => {
-    getUserProfile(username, limit, offset);
-  }, [username]);
-
   return (
     <>
       <NavBar></NavBar>
-      <form
-        className={style.createPostContainer}
-        // method="POST"
-        // action={action}
-        // encType="multipart/form-data"
-      >
+      <form className={style.createPostContainer}>
         <p className={style.formTitle}>Post Memories or Tell Stories</p>
         <input
           className={style.inputText}

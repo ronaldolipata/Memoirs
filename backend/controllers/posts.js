@@ -4,8 +4,6 @@ import cloudinaryV2 from '../utils/cloudinary.js';
 
 // Create new Post
 const createPost = async (req, res) => {
-  const authorId = req.header('X-USER-ID');
-
   try {
     const result = await cloudinaryV2.uploader.upload(req.body.image, {
       folder: 'Memoirs',
@@ -17,10 +15,9 @@ const createPost = async (req, res) => {
       imageUrl: result.url,
       privacy: 'Public',
     });
-    // res.status(201).json(newPost);
-    // res.writeHead(302, {
-    //   Location: `http://127.0.0.1:5173/${username}`,
-    // });
+    res.status(201).json({
+      Message: 'Successfully uploaded',
+    });
   } catch (error) {
     res.status(400).json({
       Error: error.message,
@@ -36,12 +33,14 @@ const searchPostById = (req, res) => {
 // Update Post
 const updatePost = async (req, res) => {
   try {
-    const updatedPost = await Post.findByIdAndUpdate(
+    await Post.findByIdAndUpdate(
       { _id: req.postId },
       { ...req.body, updatedAt: Date.now() },
       { new: true }
     );
-    res.status(200).json(updatedPost);
+    res.status(200).json({
+      Message: 'Post successfully updated',
+    });
   } catch (error) {
     res.status(400).json({
       Error: error.message,

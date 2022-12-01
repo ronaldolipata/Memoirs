@@ -1,5 +1,5 @@
 import { useState, useRef, useContext } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
 import style from '@/components/Login/style.module.css';
 import NavBar from '@/components/NavBar';
@@ -10,7 +10,6 @@ const Login = () => {
     appendUserPosts,
     appendUserId,
     appendUsername,
-    username,
     appendUsernameParams,
   } = useContext(UserContext);
 
@@ -22,11 +21,6 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  // Get limit and offset queries
-  const search = useLocation().search;
-  const limit = parseInt(new URLSearchParams(search).get('limit')) || 6;
-  const offset = parseInt(new URLSearchParams(search).get('offset')) || 0;
-
   const inputValidation = () => {
     if (refUsername.current.value === '') {
       return setLoginError('Please enter your username.');
@@ -36,13 +30,13 @@ const Login = () => {
       return setLoginError('Please enter your password.');
     }
 
-    loginUser();
+    loginUser(refUsername.current.value);
   };
 
-  const loginUser = async () => {
+  const loginUser = async (username) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/${refUsername.current.value}?limit=${limit}&offset=${offset}`
+        `http://localhost:5000/api/v1/users/${username}?limit=6&offset=0`
       );
       const data = await response.json();
 
@@ -88,9 +82,12 @@ const Login = () => {
           name="password"
           placeholder="Password"
         />
-        <button onClick={inputValidation} type="button">
-          Login
-        </button>
+        <div>
+          <button onClick={inputValidation} type="button">
+            Login
+          </button>
+          <Link to="/register">Register</Link>
+        </div>
         {loginError && <p>{loginError}</p>}
       </form>
     </>

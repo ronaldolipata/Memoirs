@@ -1,5 +1,5 @@
 import { useEffect, useContext, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
 import style from '@/components/UserProfile/style.module.css';
 import UserPosts from '@/components/UserPosts';
@@ -8,7 +8,6 @@ import NavBar from '@/components/NavBar';
 function UserProfile() {
   const {
     user,
-    username,
     appendSearchedUserDetails,
     appendSearchedUserPosts,
     appendSearchedUserId,
@@ -17,20 +16,18 @@ function UserProfile() {
     searchedUsername,
   } = useContext(UserContext);
 
+  const { firstName, lastName, username, password, email, imageUrl, bio } =
+    user;
+
   const { usernameParams } = useParams();
 
   const [noUserFound, setNoUserFound] = useState();
 
-  // Get limit and offset queries
-  const search = useLocation().search;
-  const limit = parseInt(new URLSearchParams(search).get('limit')) || 6;
-  const offset = parseInt(new URLSearchParams(search).get('offset')) || 0;
-
   // Get user data if searched or enter username via URL
-  const getUserProfile = async () => {
+  const getUserProfile = async (username) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/${usernameParams}?limit=${limit}&offset=${offset}`
+        `http://localhost:5000/api/v1/users/${username}?limit=6&offset=0`
       );
       const data = await response.json();
 
@@ -50,7 +47,7 @@ function UserProfile() {
 
   useEffect(() => {
     if (searchedUsername === undefined && username === null) {
-      getUserProfile();
+      getUserProfile(usernameParams);
     }
   }, []);
 
@@ -92,9 +89,21 @@ function UserProfile() {
                   <p>Like</p>
                 </div>
               </div>
-              <button type="button" className={style.editProfile}>
+              <Link
+                to="update"
+                state={{
+                  previousFirstName: firstName,
+                  previousLastName: lastName,
+                  previousUsername: username,
+                  previousPassword: password,
+                  previousEmail: email,
+                  previousImageUrl: imageUrl,
+                  previousBio: bio,
+                }}
+                className={style.editProfile}
+              >
                 Edit profile
-              </button>
+              </Link>
               <div className={style.bioContainer}>
                 {username !== null && usernameParams === username ? (
                   user.bio === null ? (

@@ -3,11 +3,9 @@ import Login from '@/components/Login';
 
 function App() {
   return (
-    <>
-      <div className={style.container}>
-        <Login></Login>
-      </div>
-    </>
+    <div className={style.container}>
+      <Login></Login>
+    </div>
   );
 }
 

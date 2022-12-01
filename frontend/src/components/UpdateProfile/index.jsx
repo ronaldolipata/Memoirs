@@ -1,19 +1,31 @@
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
-import style from '@/components/Register/style.module.css';
+import style from '@/components/UpdateProfile/style.module.css';
 import NavBar from '@/components/NavBar';
+import { useEffect } from 'react';
 
-const Register = () => {
+const UpdateProfile = () => {
   const { updateUserData, userId } = useContext(UserContext);
 
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
-  const [email, setEmail] = useState();
-  const [image, setImage] = useState();
-  const [error, setError] = useState();
+  const location = useLocation();
+  const {
+    previousFirstName,
+    previousLastName,
+    previousUsername,
+    previousPassword,
+    previousEmail,
+    previousImageUrl,
+    previousBio,
+  } = location.state;
+
+  const [firstName, setFirstName] = useState(previousFirstName);
+  const [lastName, setLastName] = useState(previousLastName);
+  const [username, setUsername] = useState(previousUsername);
+  const [password, setPassword] = useState(previousPassword);
+  const [email, setEmail] = useState(previousEmail);
+  const [image, setImage] = useState(null);
+  const [bio, setBio] = useState(previousBio);
 
   const navigate = useNavigate();
 
@@ -37,6 +49,10 @@ const Register = () => {
     setEmail(event.target.value);
   };
 
+  const bioOnChange = (event) => {
+    setBio(event.target.value);
+  };
+
   const fileOnChange = (event) => {
     const file = event.target.files[0];
     setFileToBase(file);
@@ -50,38 +66,36 @@ const Register = () => {
     };
   };
 
-  const createUser = async () => {
+  const updateUserProfile = async () => {
     const formData = {
       firstName,
       lastName,
       username,
       password,
       email,
-      image,
+      image: previousImageUrl,
+      bio,
     };
+
+    if (image !== null) {
+      formData.image = image;
+    }
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/register`,
+        `http://localhost:5000/api/v1/users/update`,
         {
-          method: 'POST',
+          method: 'PATCH',
           body: JSON.stringify(formData),
           headers: {
             'Content-Type': 'application/json',
+            'X-USER-ID': userId.toString(),
           },
         }
       );
       const data = await response.json();
 
-      if (data.Error === 'Missing required parameter - file') {
-        return setError('Please upload a profile picture.');
-      }
-
-      if (data.Error) {
-        return setError(data.Error);
-      }
-
-      if (data.Message === 'Successfully registered') {
+      if (data.Message === 'User profile successfully updated') {
         // Update User Data to UserContext
         updateUserData(username);
         // Navigate to User profile after uploading
@@ -95,64 +109,68 @@ const Register = () => {
   return (
     <>
       <NavBar></NavBar>
-      <form className={style.registerContainer}>
-        <input
-          onChange={firstNameOnChange}
-          className={style.inputText}
-          type="text"
-          name="firstName"
-          placeholder="First name"
+      <form className={style.updateProfileContainer}>
+        <img
+          src={previousImageUrl}
+          alt="profile picture"
+          className={style.profilePicture}
         />
-        <input
-          onChange={lastNameOnChange}
-          className={style.inputText}
-          type="text"
-          name="lastName"
-          placeholder="Last name"
-        />
-        <input
-          onChange={usernameOnChange}
-          className={style.inputText}
-          type="text"
-          name="username"
-          placeholder="Username"
-        />
-        <input
-          onChange={passwordOnChange}
-          className={style.inputText}
-          type="password"
-          name="password"
-          placeholder="Password"
-        />
-        <input
-          onChange={emailOnChange}
-          className={style.inputText}
-          type="email"
-          name="email"
-          placeholder="Email"
-        />
-        {userId && (
-          <input
-            onChange={emailOnChange}
-            className={style.inputText}
-            type="text"
-            name="bio"
-            placeholder="Bio"
-          />
-        )}
         <input
           className={style.inputFile}
           onChange={fileOnChange}
           type="file"
           name="image"
         />
-        <button onClick={createUser} type="button">
-          Register
+        <input
+          onChange={firstNameOnChange}
+          className={style.inputText}
+          type="text"
+          name="firstName"
+          defaultValue={firstName}
+        />
+        <input
+          onChange={lastNameOnChange}
+          className={style.inputText}
+          type="text"
+          name="lastName"
+          defaultValue={lastName}
+        />
+        <input
+          onChange={usernameOnChange}
+          className={style.inputText}
+          type="text"
+          name="username"
+          defaultValue={username}
+        />
+        <input
+          onChange={passwordOnChange}
+          className={style.inputText}
+          type="password"
+          name="password"
+          placeholder="Enter your password"
+        />
+        <input
+          onChange={emailOnChange}
+          className={style.inputText}
+          type="email"
+          name="email"
+          defaultValue={email}
+        />
+        {userId && (
+          <input
+            onChange={bioOnChange}
+            className={style.inputText}
+            type="text"
+            name="bio"
+            defaultValue={bio}
+          />
+        )}
+        <button onClick={updateUserProfile} type="button">
+          Update profile
         </button>
-        {error && <p>{error}</p>}
       </form>
     </>
   );
 };
 
-export default Register;
+export default UpdateProfile;

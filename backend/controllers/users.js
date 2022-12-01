@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import asyncHandler from 'express-async-handler';
 import cloudinaryV2 from '../utils/cloudinary.js';
@@ -8,9 +7,7 @@ import Post from '../models/Post.js';
 
 // Create new User
 const createUser = asyncHandler(async (req, res) => {
-  const { password, image } = req.body;
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const { image } = req.body;
 
   const result = await cloudinaryV2.uploader.upload(image, {
     folder: 'Memoirs',
@@ -19,10 +16,42 @@ const createUser = asyncHandler(async (req, res) => {
   try {
     const newUser = await User.create({
       ...req.body,
-      password: hashedPassword,
       imageUrl: result.url,
     });
-    res.status(201).json(newUser);
+    res.status(201).json({
+      Message: 'Successfully registered',
+    });
+  } catch (error) {
+    res.status(400).json({
+      Error: error.message,
+    });
+  }
+});
+
+// Create new User
+const updateUser = asyncHandler(async (req, res) => {
+  const userId = req.header('X-USER-ID');
+
+  const { image } = req.body;
+
+  const formData = {
+    ...req.body,
+    imageUrl: image,
+  };
+
+  if (image !== null) {
+    const result = await cloudinaryV2.uploader.upload(image, {
+      folder: 'Memoirs',
+    });
+
+    formData.imageUrl = result.url;
+  }
+
+  try {
+    await User.findByIdAndUpdate({ _id: userId }, formData, { new: true });
+    res.status(200).json({
+      Message: 'User profile successfully updated',
+    });
   } catch (error) {
     res.status(400).json({
       Error: error.message,
@@ -108,5 +137,6 @@ const searchUserByUsername = async (req, res) => {
 export default {
   searchUserByUsername,
   createUser,
+  updateUser,
   loginUser,
 };

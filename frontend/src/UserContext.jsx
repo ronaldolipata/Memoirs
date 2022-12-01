@@ -82,9 +82,28 @@ const UserContextComponent = ({ children }) => {
     });
   };
 
+  // Update User data to UserContext
+  const updateUserData = async (username) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/v1/users/${username}?limit=6&offset=0`
+      );
+      const data = await response.json();
+
+      appendUserDetails(data.userDetails);
+      appendUserPosts(data.userPosts);
+      appendUserId(data.userDetails.userId);
+      appendUsername(data.userDetails.username);
+      appendUsernameParams(data.userDetails.username);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
+        updateUserData,
         appendUserDetails,
         appendUserPosts,
         appendUserId,

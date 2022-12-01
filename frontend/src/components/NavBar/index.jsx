@@ -11,6 +11,7 @@ const NavBar = () => {
     appendSearchedUserPosts,
     appendSearchedUserId,
     appendSearchedUsername,
+    updateUserData,
   } = useContext(UserContext);
 
   const refSearchUsername = useRef(null);
@@ -23,11 +24,15 @@ const NavBar = () => {
     if (username === null) {
       return navigate('/');
     }
+    // Update User Data to UserContext when logo is clicked
+    updateUserData(username);
     navigate(`/${username}`);
   };
 
   const profileNavigation = () => {
     refSearchUsername.current.value = '';
+    // Update User Data to UserContext when profile picture is clicked
+    updateUserData(username);
     navigate(`/${username}`);
   };
 

@@ -1,19 +1,20 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
 import style from '@/components/ViewPost/style.module.css';
 import NavBar from '@/components/NavBar';
 
 const ViewPost = () => {
-  const { userId, username } = useContext(UserContext);
-
-  const { usernameParams } = useParams();
+  const { userId, username, updateUserData } = useContext(UserContext);
 
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
   const [imageUrl, setImageUrl] = useState();
 
   const { postId } = useParams();
+  const { usernameParams } = useParams();
+
+  const navigate = useNavigate();
 
   const getPostData = async (postId) => {
     try {
@@ -31,14 +32,25 @@ const ViewPost = () => {
 
   const deletePost = async () => {
     try {
-      await fetch(`http://localhost:5000/api/v1/posts/${postId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-USER-ID': userId.toString(),
-          'X-POST-ID': postId.toString(),
-        },
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/v1/posts/${postId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-USER-ID': userId.toString(),
+            'X-POST-ID': postId.toString(),
+          },
+        }
+      );
+      const data = await response.json();
+
+      if (data.Message === 'Post successfully deleted') {
+        // Update User Data to UserContext
+        updateUserData(username);
+        // Navigate to User profile after uploading
+        navigate(`/${username}`);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -46,7 +58,7 @@ const ViewPost = () => {
 
   useEffect(() => {
     getPostData(postId);
-  }, [username]);
+  }, [usernameParams, username]);
 
   return (
     <>

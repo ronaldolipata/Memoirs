@@ -8,7 +8,7 @@ import { UserContext } from '@/UserContext';
 import style from '@/components/UserPosts/style.module.css';
 
 const UserPosts = () => {
-  const { user, username, posts, searchedUserPosts } = useContext(UserContext);
+  const { username, posts, searchedUserPosts } = useContext(UserContext);
 
   const { usernameParams } = useParams();
 

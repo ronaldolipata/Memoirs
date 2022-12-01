@@ -1,11 +1,11 @@
-import { useState, useEffect, useContext } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
 import style from '@/components/UpdatePost/style.module.css';
 import NavBar from '@/components/NavBar';
 
 const UpdatePost = () => {
-  const { user, posts, userId, username } = useContext(UserContext);
+  const { updateUserData, userId, username } = useContext(UserContext);
 
   const location = useLocation();
   const { previousTitle, previousContent, imageUrl } = location.state;
@@ -14,6 +14,8 @@ const UpdatePost = () => {
   const [content, setContent] = useState(previousContent);
 
   const { postId } = useParams();
+
+  const navigate = useNavigate();
 
   const titleOnChange = (event) => {
     setTitle(event.target.value);
@@ -32,43 +34,42 @@ const UpdatePost = () => {
     };
 
     try {
-      await fetch(`http://localhost:5000/api/v1/posts/${postId}`, {
-        method: 'PATCH',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json',
-          'X-USER-ID': userId.toString(),
-          'X-POST-ID': postId.toString(),
-        },
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/v1/posts/${postId}`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify(formData),
+          headers: {
+            'Content-Type': 'application/json',
+            'X-USER-ID': userId.toString(),
+            'X-POST-ID': postId.toString(),
+          },
+        }
+      );
+      const data = await response.json();
+
+      if (data.Message === 'Post successfully updated') {
+        // Update User Data to UserContext
+        updateUserData(username);
+        // Navigate to User profile after uploading
+        navigate(`/${username}`);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const action = `/${username}/post`;
-
-  // useEffect(() => {
-  //   getUserProfile(username);
-  // }, [username]);
-
   return (
     <>
       <NavBar></NavBar>
       <p className={style.formTitle}>Update post</p>
-      <form
-        className={style.createPostContainer}
-        method="POST"
-        action={action}
-        encType="multipart/form-data"
-      >
+      <form className={style.createPostContainer}>
         <img className={style.image} src={imageUrl} alt="image post" />
         <div className={style.rightSide}>
           <input
             className={style.inputText}
             onChange={titleOnChange}
             type="text"
-            // placeholder={previousTitle}
             defaultValue={title}
           />
           <textarea
@@ -78,7 +79,6 @@ const UpdatePost = () => {
             id="content"
             cols="30"
             rows="10"
-            // placeholder={previousContent}
             defaultValue={content}
           ></textarea>
           <button onClick={updatePost} type="button">

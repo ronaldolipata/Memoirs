@@ -16,6 +16,14 @@ router.post(
   userController.createUser
 );
 
+router.patch(
+  '/update',
+  createUserFieldsValidation,
+  // usernameValidation,
+  // emailValidation,
+  userController.updateUser
+);
+
 router.get('/login', checkIfUserExists, userController.loginUser);
 
 router.get(
