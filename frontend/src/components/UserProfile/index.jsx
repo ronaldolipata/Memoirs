@@ -46,7 +46,7 @@ function UserProfile() {
   };
 
   useEffect(() => {
-    if (searchedUsername === undefined && username === null) {
+    if (searchedUsername === undefined && username === undefined) {
       getUserProfile(usernameParams);
     }
   }, []);
