@@ -15,12 +15,12 @@ const UserPosts = () => {
   return (
     <div className={style.postsContainer}>
       {username !== null && usernameParams === username
-        ? posts.map(({ _id, title, content, imageUrl }) => (
+        ? posts.map(({ _id, title, imageUrl }) => (
             <div key={_id}>
               <Link to={`post/${_id}`}>
                 <Card className={style.card}>
                   <CardCover>
-                    <img src={imageUrl} loading="lazy" alt="" />
+                    <img src={imageUrl} loading="lazy" alt="post picture" />
                   </CardCover>
                   <CardCover
                     sx={{
@@ -42,12 +42,12 @@ const UserPosts = () => {
               </Link>
             </div>
           ))
-        : searchedUserPosts.map(({ _id, title, content, imageUrl }) => (
+        : searchedUserPosts.map(({ _id, title, imageUrl }) => (
             <div key={_id}>
               <Link to={`post/${_id}`}>
                 <Card className={style.card}>
                   <CardCover>
-                    <img src={imageUrl} loading="lazy" alt="" />
+                    <img src={imageUrl} loading="lazy" alt="post picture" />
                   </CardCover>
                   <CardCover
                     sx={{

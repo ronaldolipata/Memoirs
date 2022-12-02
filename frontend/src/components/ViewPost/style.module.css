@@ -1,15 +1,9 @@
 .postContainer {
-  /* width: 30rem; */
+  width: 80%;
   height: calc(100vh - 5rem);
   margin-inline: auto;
-  display: grid;
-  place-content: center;
-  grid-template-columns: 1fr 1fr;
-}
-
-.image {
-  width: 40rem;
-  height: auto;
-  margin-inline: auto;
-  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
 }

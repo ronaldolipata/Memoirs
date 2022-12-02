@@ -2,6 +2,7 @@ import { useState, useContext, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
 import style from '@/components/NavBar/style.module.css';
+import { useEffect } from 'react';
 
 const NavBar = () => {
   const {
@@ -16,7 +17,7 @@ const NavBar = () => {
 
   const refSearchUsername = useRef(null);
 
-  const [loginError, setLoginError] = useState(null);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -24,6 +25,8 @@ const NavBar = () => {
     if (username === null) {
       return navigate('/');
     }
+    refSearchUsername.current.value = '';
+    setError(null);
     // Update User Data to UserContext when logo is clicked
     updateUserData(username);
     navigate(`/${username}`);
@@ -31,6 +34,7 @@ const NavBar = () => {
 
   const profileNavigation = () => {
     refSearchUsername.current.value = '';
+    setError(null);
     // Update User Data to UserContext when profile picture is clicked
     updateUserData(username);
     navigate(`/${username}`);
@@ -42,6 +46,10 @@ const NavBar = () => {
   const offset = parseInt(new URLSearchParams(search).get('offset')) || 0;
 
   const getUserProfile = async () => {
+    if (refSearchUsername.current.value === '') {
+      return setError('Enter Username to search');
+    }
+
     try {
       const response = await fetch(
         `http://localhost:5000/api/v1/users/${refSearchUsername.current.value}?limit=${limit}&offset=${offset}`
@@ -49,7 +57,7 @@ const NavBar = () => {
       const data = await response.json();
 
       if (data.Error === 'No User found') {
-        return setLoginError('Invalid Username');
+        return setError('Invalid Username');
       }
 
       // Save User's data to UserContext
@@ -58,14 +66,18 @@ const NavBar = () => {
       appendSearchedUserId(data.userDetails.userId);
       appendSearchedUsername(data.userDetails.username);
 
-      setLoginError(null);
+      setError(null);
 
       // Navigate to User profile once logged in
       navigate(`/${refSearchUsername.current.value}`);
     } catch (error) {
-      return setLoginError(error);
+      return setError(error);
     }
   };
+
+  useEffect(() => {
+    refSearchUsername.current.value = '';
+  }, [username]);
 
   return (
     <div className={style.navContainer}>
@@ -74,7 +86,7 @@ const NavBar = () => {
           Memoirs
         </p>
         <div className={style.navRightSide}>
-          {loginError && <p>{loginError}</p>}
+          {error && <p className={style.error}>{error}</p>}
           <input
             ref={refSearchUsername}
             className={style.searchInput}

@@ -10,6 +10,7 @@ const CreatePost = () => {
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
   const [image, setImage] = useState();
+  const [error, setError] = useState();
 
   const navigate = useNavigate();
 
@@ -57,6 +58,10 @@ const CreatePost = () => {
       );
       const data = await response.json();
 
+      if (data.Error === 'Missing required parameter - file') {
+        setError('Please upload a photo.');
+      }
+
       if (data.Message === 'Successfully uploaded') {
         // Update User Data to UserContext
         updateUserData(username);
@@ -85,7 +90,7 @@ const CreatePost = () => {
           name="content"
           id="content"
           cols="30"
-          rows="10"
+          rows="7"
           placeholder="Content"
         ></textarea>
         <input
@@ -97,6 +102,7 @@ const CreatePost = () => {
         <button onClick={uploadPost} type="button">
           Submit
         </button>
+        {error && <p className={style.error}>{error}</p>}
       </form>
     </>
   );

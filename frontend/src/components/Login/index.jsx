@@ -13,8 +13,7 @@ const Login = () => {
     appendUsernameParams,
   } = useContext(UserContext);
 
-  const [hashedPassword, setHashedPassword] = useState();
-  const [loginError, setLoginError] = useState(null);
+  const [error, setError] = useState();
 
   const refUsername = useRef(null);
   const refPassword = useRef(null);
@@ -23,11 +22,11 @@ const Login = () => {
 
   const inputValidation = () => {
     if (refUsername.current.value === '') {
-      return setLoginError('Please enter your username.');
+      return setError('Please enter your username.');
     }
 
     if (refPassword.current.value === '') {
-      return setLoginError('Please enter your password.');
+      return setError('Please enter your password.');
     }
 
     loginUser(refUsername.current.value);
@@ -41,11 +40,11 @@ const Login = () => {
       const data = await response.json();
 
       if (data.Error === 'No User found') {
-        return setLoginError('Invalid Username');
+        return setError('Invalid Username');
       }
 
       if (data.userDetails.password !== refPassword.current.value) {
-        return setLoginError('Invalid Password');
+        return setError('Invalid Password');
       }
 
       // Save User's data to UserContext
@@ -55,12 +54,12 @@ const Login = () => {
       appendUsername(data.userDetails.username);
       appendUsernameParams(data.userDetails.username);
 
-      setLoginError(null);
+      setError(null);
 
       // Navigate to User profile once logged in
       navigate(`/${refUsername.current.value}`);
     } catch (error) {
-      return setLoginError(error);
+      return setError(error);
     }
   };
 
@@ -88,7 +87,7 @@ const Login = () => {
           </button>
           <Link to="/register">Register</Link>
         </div>
-        {loginError && <p>{loginError}</p>}
+        {error && <p className={style.error}>{error}</p>}
       </form>
     </>
   );

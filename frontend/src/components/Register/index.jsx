@@ -149,7 +149,7 @@ const Register = () => {
         <button onClick={createUser} type="button">
           Register
         </button>
-        {error && <p>{error}</p>}
+        {error && <p className={style.error}>{error}</p>}
       </form>
     </>
   );

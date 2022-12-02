@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
-import style from '@/components/ViewPost/style.module.css';
 import NavBar from '@/components/NavBar';
+import PostPicture from '@/components/PostPicture';
+import style from '@/components/ViewPost/style.module.css';
 
 const ViewPost = () => {
   const { userId, username, updateUserData } = useContext(UserContext);
@@ -64,7 +65,7 @@ const ViewPost = () => {
     <>
       <NavBar></NavBar>
       <div className={style.postContainer}>
-        <img className={style.image} src={imageUrl} alt="post picture" />
+        <PostPicture imageUrl={imageUrl}></PostPicture>
         <div>
           <h1>{title}</h1>
           <p>{content}</p>

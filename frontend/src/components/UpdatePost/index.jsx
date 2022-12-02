@@ -1,8 +1,9 @@
 import { useState, useContext } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
-import style from '@/components/UpdatePost/style.module.css';
 import NavBar from '@/components/NavBar';
+import PostPicture from '@/components/PostPicture';
+import style from '@/components/UpdatePost/style.module.css';
 
 const UpdatePost = () => {
   const { updateUserData, userId, username } = useContext(UserContext);
@@ -64,7 +65,7 @@ const UpdatePost = () => {
       <NavBar></NavBar>
       <p className={style.formTitle}>Update post</p>
       <form className={style.createPostContainer}>
-        <img className={style.image} src={imageUrl} alt="image post" />
+        <PostPicture imageUrl={imageUrl}></PostPicture>
         <div className={style.rightSide}>
           <input
             className={style.inputText}

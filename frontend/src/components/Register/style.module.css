@@ -11,3 +11,7 @@
   padding: 0.562rem;
   text-align: center;
 }
+
+.error {
+  color: #f09a9a;
+}
