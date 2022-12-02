@@ -75,20 +75,6 @@ function UserProfile() {
                   : `${searchedUser.firstName} ${searchedUser.lastName}`}
               </p>
               <p className={style.username}>@{usernameParams}</p>
-              <div className={`${style.flexRowCenter} ${style.followAndLikes}`}>
-                <div>
-                  <p className={style.fontBold}>36</p>
-                  <p>Following</p>
-                </div>
-                <div>
-                  <p className={style.fontBold}>28</p>
-                  <p>Followers</p>
-                </div>
-                <div>
-                  <p className={style.fontBold}>1</p>
-                  <p>Like</p>
-                </div>
-              </div>
               {username !== null && usernameParams === username ? (
                 <Link
                   to="update"
