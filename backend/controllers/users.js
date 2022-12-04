@@ -1,12 +1,10 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
-import asyncHandler from 'express-async-handler';
 import cloudinaryV2 from '../utils/cloudinary.js';
 import User from '../models/User.js';
 import Post from '../models/Post.js';
 
 // Create new User
-const createUser = asyncHandler(async (req, res) => {
+const createUser = async (req, res) => {
   const { image } = req.body;
 
   const result = await cloudinaryV2.uploader.upload(image, {
@@ -14,7 +12,7 @@ const createUser = asyncHandler(async (req, res) => {
   });
 
   try {
-    const newUser = await User.create({
+    await User.create({
       ...req.body,
       imageUrl: result.url,
     });
@@ -26,10 +24,10 @@ const createUser = asyncHandler(async (req, res) => {
       Error: error.message,
     });
   }
-});
+};
 
-// Create new User
-const updateUser = asyncHandler(async (req, res) => {
+// Update User
+const updateUser = async (req, res) => {
   const userId = req.header('X-USER-ID');
 
   const { image } = req.body;
@@ -57,10 +55,10 @@ const updateUser = asyncHandler(async (req, res) => {
       Error: error.message,
     });
   }
-});
+};
 
 // Login User
-const loginUser = asyncHandler(async (req, res) => {
+const loginUser = async (req, res) => {
   const { username, password } = req.body;
 
   console.log(username, password);
@@ -81,7 +79,7 @@ const loginUser = asyncHandler(async (req, res) => {
       Error: error.message,
     });
   }
-});
+};
 
 // Search User by Username
 const searchUserByUsername = async (req, res) => {

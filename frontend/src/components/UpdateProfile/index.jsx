@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
 import style from '@/components/UpdateProfile/style.module.css';
 import NavBar from '@/components/NavBar';
-import { useEffect } from 'react';
 
 const UpdateProfile = () => {
   const { updateUserData, userId } = useContext(UserContext);
