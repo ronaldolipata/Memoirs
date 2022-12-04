@@ -7,6 +7,7 @@ import NavBar from '@/components/NavBar';
 const UpdateProfile = () => {
   const { updateUserData, userId } = useContext(UserContext);
 
+  // Get the details from the previous page
   const location = useLocation();
   const {
     previousFirstName,
@@ -18,15 +19,18 @@ const UpdateProfile = () => {
     previousBio,
   } = location.state;
 
+  // Bind changes from inputs and assigned the the previous data as the initial value
   const [firstName, setFirstName] = useState(previousFirstName);
   const [lastName, setLastName] = useState(previousLastName);
-  const [username, setUsername] = useState(previousUsername);
   const [password, setPassword] = useState(previousPassword);
-  const [email, setEmail] = useState(previousEmail);
   const [image, setImage] = useState(null);
   const [bio, setBio] = useState(previousBio);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+
+  // Use to disable Username and Email input
+  const disabledInput = true;
 
   const firstNameOnChange = (event) => {
     setFirstName(event.target.value);
@@ -36,16 +40,8 @@ const UpdateProfile = () => {
     setLastName(event.target.value);
   };
 
-  const usernameOnChange = (event) => {
-    setUsername(event.target.value);
-  };
-
   const passwordOnChange = (event) => {
     setPassword(event.target.value);
-  };
-
-  const emailOnChange = (event) => {
-    setEmail(event.target.value);
   };
 
   const bioOnChange = (event) => {
@@ -69,9 +65,9 @@ const UpdateProfile = () => {
     const formData = {
       firstName,
       lastName,
-      username,
+      username: previousUsername,
       password,
-      email,
+      email: previousEmail,
       image: previousImageUrl,
       bio,
     };
@@ -88,20 +84,24 @@ const UpdateProfile = () => {
           body: JSON.stringify(formData),
           headers: {
             'Content-Type': 'application/json',
-            'X-USER-ID': userId.toString(),
+            'X-USER-ID': userId,
           },
         }
       );
       const data = await response.json();
 
+      if (data.Error) {
+        setError(data.Error);
+      }
+
       if (data.Message === 'User profile successfully updated') {
         // Update User Data to UserContext
-        updateUserData(username);
+        updateUserData(previousUsername);
         // Navigate to User profile after uploading
-        navigate(`/${username}`);
+        navigate(`/${previousUsername}`);
       }
     } catch (error) {
-      console.log(error);
+      setError(error);
     }
   };
 
@@ -135,38 +135,38 @@ const UpdateProfile = () => {
           defaultValue={lastName}
         />
         <input
-          onChange={usernameOnChange}
           className={style.inputText}
           type="text"
           name="username"
-          defaultValue={username}
+          defaultValue={previousUsername}
+          disabled={disabledInput}
         />
         <input
           onChange={passwordOnChange}
           className={style.inputText}
           type="password"
           name="password"
-          placeholder="Enter your password"
+          placeholder="Change password?"
         />
         <input
-          onChange={emailOnChange}
           className={style.inputText}
           type="email"
           name="email"
-          defaultValue={email}
+          defaultValue={previousEmail}
+          disabled={disabledInput}
         />
-        {userId && (
-          <input
-            onChange={bioOnChange}
-            className={style.inputText}
-            type="text"
-            name="bio"
-            defaultValue={bio}
-          />
-        )}
+        <input
+          onChange={bioOnChange}
+          className={style.inputText}
+          type="text"
+          name="bio"
+          placeholder={bio === null ? 'Enter bio' : bio}
+          defaultValue={bio}
+        />
         <button onClick={updateUserProfile} type="button">
           Update profile
         </button>
+        {error && <p className={style.error}>{error}</p>}
       </form>
     </>
   );

@@ -44,3 +44,7 @@
 .inputFile {
   padding: 0;
 }
+
+.error {
+  color: #f09a9a;
+}

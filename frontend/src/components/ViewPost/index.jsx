@@ -11,12 +11,14 @@ const ViewPost = () => {
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
   const [imageUrl, setImageUrl] = useState();
+  const [error, setError] = useState(null);
 
   const { postId } = useParams();
   const { usernameParams } = useParams();
 
   const navigate = useNavigate();
 
+  // Get Post details from clicked Post picture
   const getPostData = async (postId) => {
     try {
       const response = await fetch(
@@ -27,7 +29,7 @@ const ViewPost = () => {
       setContent(data.content);
       setImageUrl(data.imageUrl);
     } catch (error) {
-      console.log(error);
+      setError(error);
     }
   };
 
@@ -39,12 +41,16 @@ const ViewPost = () => {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
-            'X-USER-ID': userId.toString(),
-            'X-POST-ID': postId.toString(),
+            'X-USER-ID': userId,
+            'X-POST-ID': postId,
           },
         }
       );
       const data = await response.json();
+
+      if (data.Error) {
+        setError(data.Error);
+      }
 
       if (data.Message === 'Post successfully deleted') {
         // Update User Data to UserContext
@@ -53,7 +59,7 @@ const ViewPost = () => {
         navigate(`/${username}`);
       }
     } catch (error) {
-      console.log(error);
+      setError(error);
     }
   };
 
@@ -70,14 +76,15 @@ const ViewPost = () => {
           <h1>{title}</h1>
           <p>{content}</p>
           <p>Author: @{usernameParams}</p>
-          {username && (
+          {username !== usernameParams ? null : (
             <>
               <Link
                 className={style.editPostLink}
                 state={{
                   previousTitle: title,
                   previousContent: content,
-                  imageUrl: imageUrl,
+                  imageUrl,
+                  postId,
                 }}
                 to="update"
               >
@@ -92,6 +99,7 @@ const ViewPost = () => {
               </button>
             </>
           )}
+          {error && <p className={style.error}>{error}</p>}
         </div>
       </div>
     </>

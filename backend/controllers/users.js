@@ -5,16 +5,28 @@ import Post from '../models/Post.js';
 
 // Create new User
 const createUser = async (req, res) => {
-  const { image } = req.body;
+  const { imageUrl } = req.body;
+  let newImageUrl;
 
-  const result = await cloudinaryV2.uploader.upload(image, {
-    folder: 'Memoirs',
-  });
+  // If user didn't input an image, then set the imageUrl with the default image profile
+  if (imageUrl === null || imageUrl === undefined) {
+    newImageUrl =
+      'https://res.cloudinary.com/dkpg4tdoq/image/upload/v1670180212/Memoirs/default-user-picture_xuvvk1.png';
+  }
+
+  // If image is thruthy or user has an input image, then upload it to Cloudinary
+  if (imageUrl) {
+    const result = await cloudinaryV2.uploader.upload(imageUrl, {
+      folder: 'Memoirs',
+    });
+    // Assign URL from the result to imageUrl
+    newImageUrl = result.url;
+  }
 
   try {
     await User.create({
       ...req.body,
-      imageUrl: result.url,
+      imageUrl: newImageUrl,
     });
     res.status(201).json({
       Message: 'Successfully registered',
@@ -37,6 +49,8 @@ const updateUser = async (req, res) => {
     imageUrl: image,
   };
 
+  // If User changed profile picture, then upload image to Cloudinary
+  // and get the URL from result. Finally, add the URL to formData object
   if (image !== null) {
     const result = await cloudinaryV2.uploader.upload(image, {
       folder: 'Memoirs',
@@ -59,21 +73,24 @@ const updateUser = async (req, res) => {
 
 // Login User
 const loginUser = async (req, res) => {
-  const { username, password } = req.body;
-
-  console.log(username, password);
+  // const { username, password } = req.body;
+  const username = req.header('X-USERNAME');
+  const password = req.header('X-PASSWORD');
 
   try {
     const user = await User.findOne({
       username,
     });
 
-    const hashedPassword = user.password;
-
-    if (user && (await bcrypt.compare(password, hashedPassword))) {
-      console.log(user);
-      res.status(200).json(user);
+    if (user && password !== user.password) {
+      return res.status(200).json({
+        Error: 'Invalid password',
+      });
     }
+
+    res.status(200).json({
+      Message: 'Successfully logged in',
+    });
   } catch (error) {
     res.status(400).json({
       Error: error.message,
@@ -129,6 +146,7 @@ const searchUserByUsername = async (req, res) => {
     userPosts,
   };
 
+  // Send response with complete User profile details
   res.status(200).json(userProfile);
 };
 

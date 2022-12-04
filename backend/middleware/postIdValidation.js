@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const postIdValidation = (req, res, next) => {
-  const postId = req.params.postId;
+  const postId = req.params.postId || req.header('X-POST-ID');
   const { Types } = mongoose;
 
   // Check if valid ObjectId

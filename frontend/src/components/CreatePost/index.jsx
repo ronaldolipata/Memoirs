@@ -7,18 +7,20 @@ import NavBar from '@/components/NavBar';
 const CreatePost = () => {
   const { userId, username, updateUserData } = useContext(UserContext);
 
-  const [title, setTitle] = useState();
-  const [content, setContent] = useState();
-  const [image, setImage] = useState();
-  const [error, setError] = useState();
+  const [title, setTitle] = useState(null);
+  const [content, setContent] = useState(null);
+  const [image, setImage] = useState(null);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
+  // Get the file details
   const fileOnChange = (event) => {
     const file = event.target.files[0];
     setFileToBase(file);
   };
 
+  // Convert file to base64 format
   const setFileToBase = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -35,7 +37,24 @@ const CreatePost = () => {
     setContent(event.target.value);
   };
 
-  const uploadPost = async () => {
+  const inputValidation = () => {
+    if (title === null) {
+      return setError('Please input a title');
+    }
+
+    if (content === null) {
+      return setError('Please input content');
+    }
+
+    if (image === null) {
+      return setError('Please input an image');
+    }
+
+    setError(null);
+    uploadPost(userId, username, title, content, image);
+  };
+
+  const uploadPost = async (userId, username, title, content, image) => {
     const formData = {
       userId,
       username,
@@ -62,14 +81,14 @@ const CreatePost = () => {
         setError('Please upload a photo.');
       }
 
-      if (data.Message === 'Successfully uploaded') {
-        // Update User Data to UserContext
+      if (data.Message === 'Post successfully uploaded') {
+        // Update User Data in UserContext
         updateUserData(username);
-        // Navigate to User profile after uploading
+        // Navigate to User profile after uploaded
         navigate(`/${username}`);
       }
     } catch (error) {
-      console.log(error);
+      setError(error);
     }
   };
 
@@ -99,7 +118,7 @@ const CreatePost = () => {
           type="file"
           name="image"
         />
-        <button onClick={uploadPost} type="button">
+        <button onClick={inputValidation} type="button">
           Submit
         </button>
         {error && <p className={style.error}>{error}</p>}

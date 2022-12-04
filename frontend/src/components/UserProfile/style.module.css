@@ -21,17 +21,6 @@
   margin-top: 0;
 }
 
-.flexRowCenter {
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-}
-
-.followAndLikes {
-  line-height: 0.5rem;
-  margin-bottom: 1rem;
-}
-
 .fontBold {
   font-weight: 700;
 }

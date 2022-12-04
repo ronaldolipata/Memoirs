@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
 import NavBar from '@/components/NavBar';
 import PostPicture from '@/components/PostPicture';
@@ -8,13 +8,13 @@ import style from '@/components/UpdatePost/style.module.css';
 const UpdatePost = () => {
   const { updateUserData, userId, username } = useContext(UserContext);
 
+  // Get the details from the previous page
   const location = useLocation();
-  const { previousTitle, previousContent, imageUrl } = location.state;
+  const { previousTitle, previousContent, imageUrl, postId } = location.state;
 
   const [title, setTitle] = useState(previousTitle);
   const [content, setContent] = useState(previousContent);
-
-  const { postId } = useParams();
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -42,12 +42,16 @@ const UpdatePost = () => {
           body: JSON.stringify(formData),
           headers: {
             'Content-Type': 'application/json',
-            'X-USER-ID': userId.toString(),
-            'X-POST-ID': postId.toString(),
+            'X-USER-ID': userId,
+            'X-POST-ID': postId,
           },
         }
       );
       const data = await response.json();
+
+      if (data.Error) {
+        return setError(data.Error);
+      }
 
       if (data.Message === 'Post successfully updated') {
         // Update User Data to UserContext
@@ -56,7 +60,7 @@ const UpdatePost = () => {
         navigate(`/${username}`);
       }
     } catch (error) {
-      console.log(error);
+      setError(error);
     }
   };
 
@@ -85,6 +89,7 @@ const UpdatePost = () => {
           <button onClick={updatePost} type="button">
             Submit
           </button>
+          {error && <p className={style.error}>{error}</p>}
         </div>
       </form>
     </>

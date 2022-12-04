@@ -29,35 +29,52 @@ const Login = () => {
       return setError('Please enter your password.');
     }
 
-    loginUser(refUsername.current.value);
+    loginUser(refUsername.current.value, refPassword.current.value);
   };
 
-  const loginUser = async (username) => {
+  const loginUser = async (username, password) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/users/${username}?limit=6&offset=0`
-      );
+      const response = await fetch(`http://localhost:5000/api/v1/users/login`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-USERNAME': username,
+          'X-PASSWORD': password,
+        },
+      });
       const data = await response.json();
 
       if (data.Error === 'No User found') {
         return setError('Invalid Username');
       }
 
-      if (data.userDetails.password !== refPassword.current.value) {
+      if (data.Error === 'Invalid password') {
         return setError('Invalid Password');
       }
 
-      // Save User's data to UserContext
-      appendUserDetails(data.userDetails);
-      appendUserPosts(data.userPosts);
-      appendUserId(data.userDetails.userId);
-      appendUsername(data.userDetails.username);
-      appendUsernameParams(data.userDetails.username);
+      if (data.Message === 'Successfully logged in') {
+        // Fetch User data based in the Username
+        try {
+          const response = await fetch(
+            `http://localhost:5000/api/v1/users/${username}?limit=6&offset=0`
+          );
+          const data = await response.json();
 
-      setError(null);
+          // Save User's data to UserContext
+          appendUserDetails(data.userDetails);
+          appendUserPosts(data.userPosts);
+          appendUserId(data.userDetails.userId);
+          appendUsername(data.userDetails.username);
+          appendUsernameParams(data.userDetails.username);
 
-      // Navigate to User profile once logged in
-      navigate(`/${refUsername.current.value}`);
+          setError(null);
+
+          // Navigate to User profile once logged in
+          navigate(`/${refUsername.current.value}`);
+        } catch (error) {
+          return setError(error);
+        }
+      }
     } catch (error) {
       return setError(error);
     }

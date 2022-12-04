@@ -16,6 +16,7 @@ function UserProfile() {
     searchedUsername,
   } = useContext(UserContext);
 
+  // Destructure User details from user in the User Context
   const { firstName, lastName, username, password, email, imageUrl, bio } =
     user;
 
@@ -56,7 +57,7 @@ function UserProfile() {
       <NavBar></NavBar>
       <div className={style.container}>
         {noUserFound === null ? (
-          <p>No user found.</p>
+          <h1>No user found.</h1>
         ) : (
           <>
             <img

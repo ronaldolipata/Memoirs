@@ -1,5 +1,5 @@
 import express from 'express';
-import createUserFieldsValidation from '../middleware/createUserFieldsValidation.js';
+import userDetailsFieldValidation from '../middleware/userDetailsFieldValidation.js';
 import emailValidation from '../middleware/emailValidation.js';
 import usernameValidation from '../middleware/usernameValidation.js';
 import checkIfUserExists from '../middleware/checkIfUserExists.js';
@@ -10,19 +10,13 @@ const router = express.Router();
 
 router.post(
   '/register',
-  createUserFieldsValidation,
+  userDetailsFieldValidation,
   usernameValidation,
   emailValidation,
   userController.createUser
 );
 
-router.patch(
-  '/update',
-  createUserFieldsValidation,
-  // usernameValidation,
-  // emailValidation,
-  userController.updateUser
-);
+router.patch('/update', userDetailsFieldValidation, userController.updateUser);
 
 router.get('/login', checkIfUserExists, userController.loginUser);
 

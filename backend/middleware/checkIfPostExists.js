@@ -1,7 +1,7 @@
 import Post from '../models/Post.js';
 
 const checkIfPostExists = async (req, res, next) => {
-  const postId = req.params.postId;
+  const postId = req.params.postId || req.header('X-POST-ID');
 
   const postExists = await Post.findOne({
     _id: postId,
@@ -12,10 +12,6 @@ const checkIfPostExists = async (req, res, next) => {
       Error: 'Post does not exists',
     });
   }
-
-  // Pass the data of Post to req.post if existed
-  req.post = postExists;
-  req.postId = postId;
 
   next();
 };

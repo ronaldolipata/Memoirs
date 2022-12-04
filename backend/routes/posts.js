@@ -1,7 +1,6 @@
 import express from 'express';
 import createPostFieldsValidation from '../middleware/createPostFieldsValidation.js';
 import idValidation from '../middleware/idValidation.js';
-import convertToObjectId from '../middleware/convertToObjectId.js';
 import checkIfUserIdExists from '../middleware/checkIfUserIdExists.js';
 import checkIfPostExists from '../middleware/checkIfPostExists.js';
 import postIdValidation from '../middleware/postIdValidation.js';
@@ -22,7 +21,6 @@ router
   .route('/:postId')
   .get(postIdValidation, checkIfPostExists, postController.searchPostById)
   .patch(
-    convertToObjectId,
     idValidation,
     checkIfUserIdExists,
     postIdValidation,
@@ -31,7 +29,6 @@ router
     postController.updatePost
   )
   .delete(
-    convertToObjectId,
     idValidation,
     checkIfUserIdExists,
     postIdValidation,

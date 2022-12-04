@@ -5,8 +5,17 @@
   gap: 1rem;
 }
 
+.postsContainer div {
+  max-height: 300px;
+}
+
 .card {
   min-height: 300px;
   width: 340px;
   cursor: pointer;
+}
+
+.postsContainer > div > a {
+  width: 340px;
+  text-align: center;
 }

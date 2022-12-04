@@ -19,3 +19,7 @@
   border-radius: 100%;
   margin-inline: auto;
 }
+
+.error {
+  color: #f09a9a;
+}

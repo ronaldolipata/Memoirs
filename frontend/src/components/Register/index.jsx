@@ -5,15 +5,15 @@ import style from '@/components/Register/style.module.css';
 import NavBar from '@/components/NavBar';
 
 const Register = () => {
-  const { updateUserData, userId } = useContext(UserContext);
+  const { updateUserData } = useContext(UserContext);
 
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
   const [email, setEmail] = useState();
-  const [image, setImage] = useState();
-  const [error, setError] = useState();
+  const [image, setImage] = useState(null);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -37,11 +37,13 @@ const Register = () => {
     setEmail(event.target.value);
   };
 
+  // Get the file details
   const fileOnChange = (event) => {
     const file = event.target.files[0];
     setFileToBase(file);
   };
 
+  // Convert file to base64 format
   const setFileToBase = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -57,8 +59,12 @@ const Register = () => {
       username,
       password,
       email,
-      image,
+      imageUrl: image,
     };
+
+    if (image === null) {
+      formData.imageUrl = null;
+    }
 
     try {
       const response = await fetch(
@@ -73,10 +79,6 @@ const Register = () => {
       );
       const data = await response.json();
 
-      if (data.Error === 'Missing required parameter - file') {
-        return setError('Please upload a profile picture.');
-      }
-
       if (data.Error) {
         return setError(data.Error);
       }
@@ -88,7 +90,7 @@ const Register = () => {
         navigate(`/${username}`);
       }
     } catch (error) {
-      console.log(error);
+      setError(error);
     }
   };
 
@@ -131,15 +133,6 @@ const Register = () => {
           name="email"
           placeholder="Email"
         />
-        {userId && (
-          <input
-            onChange={emailOnChange}
-            className={style.inputText}
-            type="text"
-            name="bio"
-            placeholder="Bio"
-          />
-        )}
         <input
           className={style.inputFile}
           onChange={fileOnChange}

@@ -7,3 +7,7 @@
   align-items: center;
   gap: 2rem;
 }
+
+.error {
+  color: #f09a9a;
+}

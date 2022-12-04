@@ -1,8 +1,7 @@
-import { useState, useContext, useRef } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { UserContext } from '@/UserContext';
 import style from '@/components/NavBar/style.module.css';
-import { useEffect } from 'react';
 
 const NavBar = () => {
   const {
@@ -27,7 +26,7 @@ const NavBar = () => {
     }
     refSearchUsername.current.value = '';
     setError(null);
-    // Update User Data to UserContext when logo is clicked
+    // Update User Data in UserContext when logo is clicked
     updateUserData(username);
     navigate(`/${username}`);
   };
@@ -35,7 +34,7 @@ const NavBar = () => {
   const profileNavigation = () => {
     refSearchUsername.current.value = '';
     setError(null);
-    // Update User Data to UserContext when profile picture is clicked
+    // Update User Data in UserContext when profile picture is clicked
     updateUserData(username);
     navigate(`/${username}`);
   };

@@ -1,33 +1,34 @@
 import mongoose from 'mongoose';
 
 const idValidation = (req, res, next) => {
-  // const authorId = req.header('X-USER-ID');
+  const userId = req.header('X-USER-ID');
+  // const postId = req.postId || req.header('X-POST-ID');
 
-  if (req.userId === undefined) {
+  if (userId === undefined) {
     return res.status(422).json({
       Error: 'No User ID provided',
     });
   }
 
-  if (req.postId === undefined) {
-    return res.status(422).json({
-      Error: 'No User ID provided',
-    });
-  }
+  // if (postId === undefined) {
+  //   return res.status(422).json({
+  //     Error: 'No Post ID provided',
+  //   });
+  // }
 
   // Check if valid ObjectId
-  if (!mongoose.Types.ObjectId.isValid(req.userId)) {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(422).json({
       Error: 'Invalid User ID',
     });
   }
 
-  // Check if valid ObjectId
-  if (!mongoose.Types.ObjectId.isValid(req.postId)) {
-    return res.status(422).json({
-      Error: 'Invalid Post ID',
-    });
-  }
+  // // Check if valid ObjectId
+  // if (!mongoose.Types.ObjectId.isValid(postId)) {
+  //   return res.status(422).json({
+  //     Error: 'Invalid Post ID',
+  //   });
+  // }
 
   next();
 };
