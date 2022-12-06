@@ -78,7 +78,7 @@ const UpdateProfile = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/update`,
+        `https://memoirs.onrender.com:5000/api/v1/users/update`,
         {
           method: 'PATCH',
           body: JSON.stringify(formData),

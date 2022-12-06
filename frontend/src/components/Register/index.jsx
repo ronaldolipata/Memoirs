@@ -68,7 +68,7 @@ const Register = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/register`,
+        `https://memoirs.onrender.com:5000/api/v1/users/register`,
         {
           method: 'POST',
           body: JSON.stringify(formData),

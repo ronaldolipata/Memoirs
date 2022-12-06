@@ -51,7 +51,7 @@ const NavBar = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/${refSearchUsername.current.value}?limit=${limit}&offset=${offset}`
+        `https://memoirs.onrender.com:5000/api/v1/users/${refSearchUsername.current.value}?limit=${limit}&offset=${offset}`
       );
       const data = await response.json();
 

@@ -36,7 +36,7 @@ const UpdatePost = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/posts/${postId}`,
+        `https://memoirs.onrender.com:5000/api/v1/posts/${postId}`,
         {
           method: 'PATCH',
           body: JSON.stringify(formData),

@@ -34,14 +34,17 @@ const Login = () => {
 
   const loginUser = async (username, password) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/users/login`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-USERNAME': username,
-          'X-PASSWORD': password,
-        },
-      });
+      const response = await fetch(
+        `https://memoirs.onrender.com:5000/api/v1/users/login`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-USERNAME': username,
+            'X-PASSWORD': password,
+          },
+        }
+      );
       const data = await response.json();
 
       if (data.Error === 'No User found') {
@@ -56,7 +59,7 @@ const Login = () => {
         // Fetch User data based in the Username
         try {
           const response = await fetch(
-            `http://localhost:5000/api/v1/users/${username}?limit=6&offset=0`
+            `https://memoirs.onrender.com:5000/api/v1/users/${username}?limit=6&offset=0`
           );
           const data = await response.json();
 

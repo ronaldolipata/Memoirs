@@ -28,7 +28,7 @@ function UserProfile() {
   const getUserProfile = async (username) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/users/${username}?limit=6&offset=0`
+        `https://memoirs.onrender.com:5000/api/v1/users/${username}?limit=6&offset=0`
       );
       const data = await response.json();
 
