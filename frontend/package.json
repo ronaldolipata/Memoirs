@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint:fix": "eslint ./src --ext .jsx,.js --quiet --fix --ignore-path ./.gitignore"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
