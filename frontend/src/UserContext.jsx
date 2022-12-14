@@ -86,7 +86,7 @@ const UserContextComponent = ({ children }) => {
   const updateUserData = async (username) => {
     try {
       const response = await fetch(
-        `https://memoirs.onrender.com:5000/api/v1/users/${username}?limit=6&offset=0`
+        `https://memoirs.onrender.com/api/v1/users/${username}?limit=6&offset=0`
       );
       const data = await response.json();
 

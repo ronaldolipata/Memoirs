@@ -22,7 +22,7 @@ const ViewPost = () => {
   const getPostData = async (postId) => {
     try {
       const response = await fetch(
-        `https://memoirs.onrender.com:5000/api/v1/posts/${postId}`
+        `https://memoirs.onrender.com/api/v1/posts/${postId}`
       );
       const data = await response.json();
       setTitle(data.title);
@@ -36,7 +36,7 @@ const ViewPost = () => {
   const deletePost = async () => {
     try {
       const response = await fetch(
-        `https://memoirs.onrender.com:5000/api/v1/posts/${postId}`,
+        `https://memoirs.onrender.com/api/v1/posts/${postId}`,
         {
           method: 'DELETE',
           headers: {

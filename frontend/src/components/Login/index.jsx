@@ -35,7 +35,7 @@ const Login = () => {
   const loginUser = async (username, password) => {
     try {
       const response = await fetch(
-        `https://memoirs.onrender.com:5000/api/v1/users/login`,
+        `https://memoirs.onrender.com/api/v1/users/login`,
         {
           method: 'GET',
           headers: {
@@ -59,7 +59,7 @@ const Login = () => {
         // Fetch User data based in the Username
         try {
           const response = await fetch(
-            `https://memoirs.onrender.com:5000/api/v1/users/${username}?limit=6&offset=0`
+            `https://memoirs.onrender.com/api/v1/users/${username}?limit=6&offset=0`
           );
           const data = await response.json();
 

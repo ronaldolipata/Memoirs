@@ -65,7 +65,7 @@ const CreatePost = () => {
 
     try {
       const response = await fetch(
-        `https://memoirs.onrender.com:5000/api/v1/users/${username}/post`,
+        `https://memoirs.onrender.com/api/v1/users/${username}/post`,
         {
           method: 'POST',
           body: JSON.stringify(formData),
